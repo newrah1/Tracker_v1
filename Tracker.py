@@ -1,9 +1,9 @@
 import mysql.connector
 import traceback
 import pandas as pd
+from configparser import ConfigParser
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, \
-    QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 from pandas import option_context
@@ -55,6 +55,15 @@ class ShowAllFirearms_PopUp(QWidget):
 
 
 class Ui_MainWindow(object):
+
+    def __init__(self):
+        self.conn = mysql.connector.connect(host="localhost",
+                                            user='Tracker',
+                                            password='Tracker',
+                                            database='Configuration_V1',
+                                            auth_plugin='mysql_native_password'
+                                            )
+
     def config_query(self, query, text, return_value):
         # save to DataFrame
         df = pd.read_sql(query, self.conn)
@@ -76,16 +85,15 @@ class Ui_MainWindow(object):
         try:
             # get the value from the Firearm comboBox
             Selected_Firearm = self.FTab_Firearm_Combo.currentText()
+
             # query the DB save to df
             firearm_df = self.config_query(
                 "SELECT * FROM Configuration_V1.Firearm",
                 "Number of Configurations = ",
                 "None")
             # filter by selected firearm
-            query = ('{}"{}"').format("Name == ", str(Selected_Firearm))
+            query = '{}"{}"'.format("Name == ", str(Selected_Firearm))
             firearm_df = firearm_df.query(query)
-
-            items = ['self.FTab_Name_TB']
 
             # clear the form
             self.FTab_Name_TB.clear()
@@ -97,7 +105,8 @@ class Ui_MainWindow(object):
             self.FTab_OLen_TB.clear()
             self.FTab_BarrelLen_TB.clear()
             self.FTab_Weight_TB.clear()
-            self.FTab_TB.clear()
+            self.FTab_Notes_TB.clear()
+            self.FTab_Picture_LBL.clear()
 
             # fill in the form
             self.FTab_Name_TB.setText(
@@ -117,13 +126,11 @@ class Ui_MainWindow(object):
                 firearm_df['Barrel_Len_Inch'].to_string(index=False))
             self.FTab_Weight_TB.setText(
                 firearm_df['Weight_lb'].to_string(index=False))
-            index = firearm_df.index[firearm_df['Name'] == str(
-                Selected_Firearm)].tolist()
 
             # Context manager to temporarily set options in the with statement context.
             # required to display 'Notes'
             with option_context('display.max_colwidth', None):
-                self.FTab_TB.setText(firearm_df['Notes'].to_string(
+                self.FTab_Notes_TB.setText(firearm_df['Notes'].to_string(
                     index=False))
 
             # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
@@ -142,7 +149,7 @@ class Ui_MainWindow(object):
                 "Number of Configurations = ",
                 "None")
             # filter by selected firearm
-            query = ('{}"{}"').format("Name == ", str(Selected_Bullet))
+            query = '{}"{}"'.format("Name == ", str(Selected_Bullet))
             bullet_df = firearm_df.query(query)
 
             # clear the form
@@ -226,6 +233,34 @@ class Ui_MainWindow(object):
             self.FTab_ShowFirearms_POP.show()
 
     def setupUi(self, MainWindow):
+        firearms_df = self.config_query(
+            "SELECT * FROM Configuration_V1.Firearm",
+            "Number of Configurations = ",
+            "None")
+        firearms_unique = firearms_df['Name'].unique()
+        firearms_list = firearms_unique.tolist()
+
+        bullets_df = self.config_query(
+            "SELECT * FROM Configuration_V1.bullet",
+            "Number of Bullets = ",
+            "None")
+        bullets_unique = bullets_df['Name'].unique()
+        bullets_list = bullets_unique.tolist()
+
+        powders_df = self.config_query(
+            "SELECT * FROM Configuration_V1.powder",
+            "Number of Powders = ",
+            "None")
+        powders_unique = powders_df['Name'].unique()
+        powders_list = powders_unique.tolist()
+
+        cases_df = self.config_query(
+            "SELECT * FROM Configuration_V1.case",
+            "Number of Cases = ",
+            "None")
+        cases_unique = cases_df['Name'].unique()
+        cases_list = cases_unique.tolist()
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1112, 1009)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -423,9 +458,13 @@ class Ui_MainWindow(object):
         self.FTab_Firearm_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
         self.FTab_Firearm_LBL.setAlignment(QtCore.Qt.AlignCenter)
         self.FTab_Firearm_LBL.setObjectName("FTab_Firearm_LBL")
+
+        # Firearms Combo Box
         self.FTab_Firearm_Combo = QtWidgets.QComboBox(self.FTab_tab)
         self.FTab_Firearm_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
         self.FTab_Firearm_Combo.setObjectName("FTab_Firearm_Combo")
+        self.FTab_Firearm_Combo.addItems(firearms_list)
+
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.FTab_tab)
         self.verticalLayoutWidget_2.setGeometry(
             QtCore.QRect(490, 80, 160, 361))
@@ -515,9 +554,13 @@ class Ui_MainWindow(object):
         self.BTab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
         self.BTab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
         self.BTab_Notes_LBL.setObjectName("BTab_Notes_LBL")
+
+        # BTab Combo Box
         self.BTab_Bullet_Combo = QtWidgets.QComboBox(self.BTab_tab)
         self.BTab_Bullet_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
         self.BTab_Bullet_Combo.setObjectName("BTab_Bullet_Combo")
+        self.BTab_Bullet_Combo.addItems(bullets_list)
+
         self.BTab_Bullet_LBL = QtWidgets.QLabel(self.BTab_tab)
         self.BTab_Bullet_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
         self.BTab_Bullet_LBL.setAlignment(QtCore.Qt.AlignCenter)
@@ -778,9 +821,13 @@ class Ui_MainWindow(object):
         self.PTab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
         self.PTab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
         self.PTab_Notes_LBL.setObjectName("PTab_Notes_LBL")
+
+        # PTab Powder ComboBox
         self.PTab_Powder_Combo = QtWidgets.QComboBox(self.PTab_tab)
         self.PTab_Powder_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
         self.PTab_Powder_Combo.setObjectName("PTab_Powder_Combo")
+        self.PTab_Powder_Combo.addItems(powders_list)
+
         self.PTab_Powder_LBL = QtWidgets.QLabel(self.PTab_tab)
         self.PTab_Powder_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
         self.PTab_Powder_LBL.setAlignment(QtCore.Qt.AlignCenter)
@@ -1035,15 +1082,20 @@ class Ui_MainWindow(object):
         self.PTab_BTN_10.setObjectName("PTab_BTN_10")
         self.PTab_verticalLayout.addWidget(self.PTab_BTN_10)
         self.tabWidget.addTab(self.PTab_tab, "")
+
+        # CTab
         self.CTab_tab = QtWidgets.QWidget()
         self.CTab_tab.setObjectName("CTab_tab")
         self.CTab_Notes_LBL = QtWidgets.QLabel(self.CTab_tab)
         self.CTab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
         self.CTab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
         self.CTab_Notes_LBL.setObjectName("CTab_Notes_LBL")
+        # CTab ComboBox
         self.CTab_Cases_Combo = QtWidgets.QComboBox(self.CTab_tab)
         self.CTab_Cases_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
         self.CTab_Cases_Combo.setObjectName("CTab_Cases_Combo")
+        self.CTab_Cases_Combo.addItems(cases_list)
+
         self.CTab_Firearm_LBL = QtWidgets.QLabel(self.CTab_tab)
         self.CTab_Firearm_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
         self.CTab_Firearm_LBL.setAlignment(QtCore.Qt.AlignCenter)
