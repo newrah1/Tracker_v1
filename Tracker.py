@@ -55,14 +55,23 @@ class ShowAllFirearms_PopUp(QWidget):
 
 
 class Ui_MainWindow(object):
-
     def __init__(self):
-        self.conn = mysql.connector.connect(host="localhost",
-                                            user='Tracker',
-                                            password='Tracker',
-                                            database='Configuration_V1',
-                                            auth_plugin='mysql_native_password'
+        # set run parameters
+        self.parser = ConfigParser()
+        self.parser.read("./Tracker.ini")
+
+        print(self.parser['SQL']['host'])
+
+        self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
+                                            user=self.parser['SQL']['user'],
+                                            password=self.parser['SQL'][
+                                                'password'],
+                                            database=self.parser['SQL'][
+                                                'database'],
+                                            auth_plugin=self.parser['SQL'][
+                                                'auth_plugin']
                                             )
+
 
     def config_query(self, query, text, return_value):
         # save to DataFrame
@@ -237,6 +246,7 @@ class Ui_MainWindow(object):
             "SELECT * FROM Configuration_V1.Firearm",
             "Number of Configurations = ",
             "None")
+
         firearms_unique = firearms_df['Name'].unique()
         firearms_list = firearms_unique.tolist()
 
