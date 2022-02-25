@@ -1,8 +1,230 @@
-
+import mysql.connector
+import traceback
+import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, \
+    QVBoxLayout, QWidget
+from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt
+from pandas import option_context
+
+
+class ShowAllFirearms_PopUp(QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window.
+    """
+    def config_query(self, query, text, return_value):
+        # save to DataFrame
+        df = pd.read_sql(query, self.conn)
+
+        if return_value == 'None':
+            pass
+        elif return_value == 'True':
+            # print the query
+            print("Query = ", query)
+
+            # print the number of rows
+            rows = df.shape[0]
+            print('{}{}\n'.format(text, rows))
+
+            print(df.to_string(max_rows=5))
+        return df
+
+    def __init__(self):
+        self.conn = mysql.connector.connect(host="localhost",
+                                            user='Tracker',
+                                            password='Tracker',
+                                            database='Configuration_V1',
+                                            auth_plugin='mysql_native_password'
+                                            )
+        super().__init__()
+        firearm_df = self.config_query(
+            "SELECT * FROM Configuration_V1.Firearm",
+            "Number of Configurations = ",
+            "None")
+
+        self.setWindowTitle("List of Firearms")
+        layout = QVBoxLayout()
+        self.label = QLabel(self)
+        self.label.setText(firearm_df['Name'].to_string(index=False))
+        self.label.setStyleSheet("border: 1px solid black;")
+        self.label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
 
 class Ui_MainWindow(object):
+    def config_query(self, query, text, return_value):
+        # save to DataFrame
+        df = pd.read_sql(query, self.conn)
+
+        if return_value == 'None':
+            pass
+        elif return_value == 'True':
+            # print the query
+            print("Query = ", query)
+
+            # print the number of rows
+            rows = df.shape[0]
+            print('{}{}\n'.format(text, rows))
+
+            print(df.to_string(max_rows=5))
+        return df
+
+    def displayData_FTab(self):
+        try:
+            # get the value from the Firearm comboBox
+            Selected_Firearm = self.FTab_Firearm_Combo.currentText()
+            # query the DB save to df
+            firearm_df = self.config_query(
+                "SELECT * FROM Configuration_V1.Firearm",
+                "Number of Configurations = ",
+                "None")
+            # filter by selected firearm
+            query = ('{}"{}"').format("Name == ", str(Selected_Firearm))
+            firearm_df = firearm_df.query(query)
+
+            items = ['self.FTab_Name_TB']
+
+            # clear the form
+            self.FTab_Name_TB.clear()
+            self.FTab_Type_TB.clear()
+            self.FTab_Manufacturer_TB.clear()
+            self.FTab_SKU_TB.clear()
+            self.FTab_Model_TB.clear()
+            self.FTab_Caliber_TB.clear()
+            self.FTab_OLen_TB.clear()
+            self.FTab_BarrelLen_TB.clear()
+            self.FTab_Weight_TB.clear()
+            self.FTab_TB.clear()
+
+            # fill in the form
+            self.FTab_Name_TB.setText(
+                firearm_df['Name'].to_string(index=False))
+            self.FTab_Type_TB.setText(
+                firearm_df['Firearm_Type'].to_string(index=False))
+            self.FTab_Manufacturer_TB.setText(
+                firearm_df['Manufacturer'].to_string(index=False))
+            self.FTab_SKU_TB.setText(firearm_df['SKU'].to_string(index=False))
+            self.FTab_Model_TB.setText(
+                firearm_df['Model'].to_string(index=False))
+            self.FTab_Caliber_TB.setText(
+                firearm_df['Caliber'].to_string(index=False))
+            self.FTab_OLen_TB.setText(
+                firearm_df['Overall_Length_Inch'].to_string(index=False))
+            self.FTab_BarrelLen_TB.setText(
+                firearm_df['Barrel_Len_Inch'].to_string(index=False))
+            self.FTab_Weight_TB.setText(
+                firearm_df['Weight_lb'].to_string(index=False))
+            index = firearm_df.index[firearm_df['Name'] == str(
+                Selected_Firearm)].tolist()
+
+            # Context manager to temporarily set options in the with statement context.
+            # required to display 'Notes'
+            with option_context('display.max_colwidth', None):
+                self.FTab_TB.setText(firearm_df['Notes'].to_string(
+                    index=False))
+
+            # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
+
+        except Exception as e:
+            print("Exception = ", str(e))
+            traceback.print_exc()
+
+    def displayData_BTab(self):
+        try:
+            # get the value from the Firearm comboBox
+            Selected_Bullet = self.BTab_Bullet_Combo.currentText()
+            # query the DB save to df
+            firearm_df = self.config_query(
+                "SELECT * FROM Configuration_V1.bullet",
+                "Number of Configurations = ",
+                "None")
+            # filter by selected firearm
+            query = ('{}"{}"').format("Name == ", str(Selected_Bullet))
+            bullet_df = firearm_df.query(query)
+
+            # clear the form
+            self.BTab_Name_TB.clear()
+            self.BTab_Manufacturer_TB.clear()
+            self.BTab_Size_Inch_TB.clear()
+            self.BTab_Size_mm_TB.clear()
+            self.BTab_Weight_TB.clear()
+            self.BTab_Type_TB.clear()
+            self.BTab_SKU_TB.clear()
+            self.BTab_BBase_TB.clear()
+            self.BTab_BC_TB.clear()
+            self.BTab_Length_TB.clear()
+            self.BTab_Notes_TB.clear()
+            self.BTab_graphics_LBL.clear()
+
+            # fill in the form
+            self.BTab_Name_TB.setText(
+                bullet_df['Name'].to_string(index=False))
+            self.BTab_Manufacturer_TB.setText(
+                bullet_df['Manufacturer'].to_string(index=False))
+            self.BTab_Size_Inch_TB.setText(
+                bullet_df['Size_Inch'].to_string(index=False))
+            self.BTab_Size_mm_TB.setText(
+                bullet_df['Size_mm'].to_string(index=False))
+            self.BTab_Weight_TB.setText(
+                bullet_df['Weight'].to_string(index=False))
+            self.BTab_Type_TB.setText(
+                bullet_df['Type'].to_string(index=False))
+            self.BTab_SKU_TB.setText(
+                bullet_df['SKU'].to_string(index=False))
+            self.BTab_Caliber_TB.setText(
+                bullet_df['Caliber'].to_string(index=False))
+            self.BTab_BBase_TB.setText(
+                bullet_df['Bullet_Base'].to_string(index=False))
+            self.BTab_BC_TB.setText(
+                bullet_df['Ballistic_Coefficient'].to_string(index=False))
+            self.BTab_Length_TB.setText(
+                bullet_df['Notes'].to_string(index=False))
+            self.BTab_Notes_TB.setText(
+                bullet_df['Notes'].to_string(index=False))
+
+            # Context manager to temporarily set options in the with statement context.
+            # required to display 'Notes'
+            with option_context('display.max_colwidth', None):
+                self.FTab_TB.setText(firearm_df['Notes'].to_string(
+                    index=False))
+
+            # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
+
+        except Exception as e:
+            print("Exception = ", str(e))
+            traceback.print_exc()
+
+    def displayData_PTab(self):
+        pass
+
+    def displayData_CTab(self):
+        pass
+
+    def displayData_PRTab(self):
+        pass
+
+    def displayData_DTab(self):
+        pass
+
+    def displayData_STab(self):
+        pass
+
+    def displayData_MTab(self):
+        pass
+
+    def displayData_PTab(self):
+        pass
+
+    def PopUp_ShowAllFirearms(self, checked):
+        if self.FTab_ShowFirearms_POP.isVisible():
+            self.FTab_ShowFirearms_POP.hide()
+
+        else:
+            self.FTab_ShowFirearms_POP.show()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1112, 1009)
@@ -37,7 +259,8 @@ class Ui_MainWindow(object):
         self.FTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.FTab_Slot_7_LBL.setObjectName("FTab_Slot_7_LBL")
         self.FTab_gridLayout.addWidget(self.FTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.FTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_2)
+        self.FTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_2)
         self.FTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_TwistRate_TB.setObjectName("FTab_TwistRate_TB")
         self.FTab_gridLayout.addWidget(self.FTab_TwistRate_TB, 10, 1, 1, 1)
@@ -48,7 +271,8 @@ class Ui_MainWindow(object):
         self.FTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_Name_TB.setObjectName("FTab_Name_TB")
         self.FTab_gridLayout.addWidget(self.FTab_Name_TB, 2, 1, 1, 1)
-        self.FTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_2)
+        self.FTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_2)
         self.FTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_ThreadSize_TB.setObjectName("FTab_ThreadSize_TB")
         self.FTab_gridLayout.addWidget(self.FTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -96,7 +320,9 @@ class Ui_MainWindow(object):
         self.FTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.FTab_Weight_LBL.setObjectName("FTab_Weight_LBL")
         self.FTab_gridLayout.addWidget(self.FTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem = QtWidgets.QSpacerItem(20, 40,
+                                           QtWidgets.QSizePolicy.Minimum,
+                                           QtWidgets.QSizePolicy.Expanding)
         self.FTab_gridLayout.addItem(spacerItem, 34, 1, 1, 1)
         self.FTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.FTab_Action_LBL.setObjectName("FTab_Action_LBL")
@@ -116,7 +342,8 @@ class Ui_MainWindow(object):
         self.FTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.FTab_Slot_12_LBL.setObjectName("FTab_Slot_12_LBL")
         self.FTab_gridLayout.addWidget(self.FTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.FTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_2)
+        self.FTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_2)
         self.FTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_Manufacturer_TB.setObjectName("FTab_Manufacturer_TB")
         self.FTab_gridLayout.addWidget(self.FTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -132,7 +359,8 @@ class Ui_MainWindow(object):
         self.FTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_OLen_TB.setObjectName("FTab_OLen_TB")
         self.FTab_gridLayout.addWidget(self.FTab_OLen_TB, 6, 1, 1, 1)
-        self.FTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_2)
+        self.FTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_2)
         self.FTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.FTab_BarrelLen_TB.setObjectName("FTab_BarrelLen_TB")
         self.FTab_gridLayout.addWidget(self.FTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -199,19 +427,28 @@ class Ui_MainWindow(object):
         self.FTab_Firearm_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
         self.FTab_Firearm_Combo.setObjectName("FTab_Firearm_Combo")
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.FTab_tab)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_2.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
-        self.FTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
+        self.FTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_2)
         self.FTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.FTab_verticalLayout.setObjectName("FTab_verticalLayout")
         self.FTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.FTab_Add_BTN.setDefault(True)
         self.FTab_Add_BTN.setObjectName("FTab_Add_BTN")
         self.FTab_verticalLayout.addWidget(self.FTab_Add_BTN)
-        self.FTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+
+        # FTab Show All Button
+        self.FTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_2)
         self.FTab_View_All_BTN.setAutoDefault(False)
         self.FTab_View_All_BTN.setDefault(True)
         self.FTab_View_All_BTN.setObjectName("FTab_View_All_BTN")
+        self.FTab_ShowFirearms_POP = ShowAllFirearms_PopUp()
+        self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
+
+
         self.FTab_verticalLayout.addWidget(self.FTab_View_All_BTN)
         self.FTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.FTab_BTN_3.setDefault(True)
@@ -258,13 +495,19 @@ class Ui_MainWindow(object):
         self.FTab_Picture_LBL = QtWidgets.QLabel(self.FTab_tab)
         self.FTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.FTab_Picture_LBL.setText("")
-        self.FTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.FTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.FTab_Picture_LBL.setScaledContents(True)
         self.FTab_Picture_LBL.setObjectName("FTab_Picture_LBL")
+
+        # FTab ShowData
         self.FTab_ShowData_BTN = QtWidgets.QPushButton(self.FTab_tab)
         self.FTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
         self.FTab_ShowData_BTN.setDefault(True)
         self.FTab_ShowData_BTN.setObjectName("FTab_ShowData_BTN")
+        self.FTab_ShowData_BTN.clicked.connect(self.displayData_FTab)
+
+
         self.tabWidget.addTab(self.FTab_tab, "")
         self.BTab_tab = QtWidgets.QWidget()
         self.BTab_tab.setObjectName("BTab_tab")
@@ -289,7 +532,8 @@ class Ui_MainWindow(object):
         self.BTab_Picture_LBL = QtWidgets.QLabel(self.BTab_tab)
         self.BTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.BTab_Picture_LBL.setText("")
-        self.BTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.BTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.BTab_Picture_LBL.setScaledContents(True)
         self.BTab_Picture_LBL.setObjectName("BTab_Picture_LBL")
         self.formLayoutWidget_3 = QtWidgets.QWidget(self.BTab_tab)
@@ -314,7 +558,8 @@ class Ui_MainWindow(object):
         self.BTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.BTab_Slot_7_LBL.setObjectName("BTab_Slot_7_LBL")
         self.BTab_gridLayout.addWidget(self.BTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.BTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_3)
+        self.BTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_3)
         self.BTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_TwistRate_TB.setObjectName("BTab_TwistRate_TB")
         self.BTab_gridLayout.addWidget(self.BTab_TwistRate_TB, 10, 1, 1, 1)
@@ -325,7 +570,8 @@ class Ui_MainWindow(object):
         self.BTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_Name_TB.setObjectName("BTab_Name_TB")
         self.BTab_gridLayout.addWidget(self.BTab_Name_TB, 2, 1, 1, 1)
-        self.BTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_3)
+        self.BTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_3)
         self.BTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_ThreadSize_TB.setObjectName("BTab_ThreadSize_TB")
         self.BTab_gridLayout.addWidget(self.BTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -373,7 +619,9 @@ class Ui_MainWindow(object):
         self.BTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.BTab_Weight_LBL.setObjectName("BTab_Weight_LBL")
         self.BTab_gridLayout.addWidget(self.BTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.BTab_gridLayout.addItem(spacerItem1, 34, 1, 1, 1)
         self.BTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.BTab_Action_LBL.setObjectName("BTab_Action_LBL")
@@ -393,7 +641,8 @@ class Ui_MainWindow(object):
         self.BTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.BTab_Slot_12_LBL.setObjectName("BTab_Slot_12_LBL")
         self.BTab_gridLayout.addWidget(self.BTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.BTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_3)
+        self.BTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_3)
         self.BTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_Manufacturer_TB.setObjectName("BTab_Manufacturer_TB")
         self.BTab_gridLayout.addWidget(self.BTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -409,7 +658,8 @@ class Ui_MainWindow(object):
         self.BTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_OLen_TB.setObjectName("BTab_OLen_TB")
         self.BTab_gridLayout.addWidget(self.BTab_OLen_TB, 6, 1, 1, 1)
-        self.BTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_3)
+        self.BTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_3)
         self.BTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_BarrelLen_TB.setObjectName("BTab_BarrelLen_TB")
         self.BTab_gridLayout.addWidget(self.BTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -469,16 +719,19 @@ class Ui_MainWindow(object):
         self.BTab_Slot_11_TB.setObjectName("BTab_Slot_11_TB")
         self.BTab_gridLayout.addWidget(self.BTab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.BTab_tab)
-        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_3.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
-        self.BTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
+        self.BTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_3)
         self.BTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.BTab_verticalLayout.setObjectName("BTab_verticalLayout")
         self.BTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         self.BTab_Add_BTN.setDefault(True)
         self.BTab_Add_BTN.setObjectName("BTab_Add_BTN")
         self.BTab_verticalLayout.addWidget(self.BTab_Add_BTN)
-        self.BTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
+        self.BTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_3)
         self.BTab_View_All_BTN.setAutoDefault(False)
         self.BTab_View_All_BTN.setDefault(True)
         self.BTab_View_All_BTN.setObjectName("BTab_View_All_BTN")
@@ -542,7 +795,8 @@ class Ui_MainWindow(object):
         self.PTab_Picture_LBL = QtWidgets.QLabel(self.PTab_tab)
         self.PTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.PTab_Picture_LBL.setText("")
-        self.PTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.PTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.PTab_Picture_LBL.setScaledContents(True)
         self.PTab_Picture_LBL.setObjectName("PTab_Picture_LBL")
         self.formLayoutWidget_4 = QtWidgets.QWidget(self.PTab_tab)
@@ -567,7 +821,8 @@ class Ui_MainWindow(object):
         self.PTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
         self.PTab_Slot_7_LBL.setObjectName("PTab_Slot_7_LBL")
         self.PTab_gridLayout.addWidget(self.PTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.PTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
+        self.PTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_4)
         self.PTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_TwistRate_TB.setObjectName("PTab_TwistRate_TB")
         self.PTab_gridLayout.addWidget(self.PTab_TwistRate_TB, 10, 1, 1, 1)
@@ -578,7 +833,8 @@ class Ui_MainWindow(object):
         self.PTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_Name_TB.setObjectName("PTab_Name_TB")
         self.PTab_gridLayout.addWidget(self.PTab_Name_TB, 2, 1, 1, 1)
-        self.PTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
+        self.PTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_4)
         self.PTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_ThreadSize_TB.setObjectName("PTab_ThreadSize_TB")
         self.PTab_gridLayout.addWidget(self.PTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -626,7 +882,9 @@ class Ui_MainWindow(object):
         self.PTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
         self.PTab_Weight_LBL.setObjectName("PTab_Weight_LBL")
         self.PTab_gridLayout.addWidget(self.PTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.PTab_gridLayout.addItem(spacerItem2, 34, 1, 1, 1)
         self.PTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
         self.PTab_Action_LBL.setObjectName("PTab_Action_LBL")
@@ -646,7 +904,8 @@ class Ui_MainWindow(object):
         self.PTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
         self.PTab_Slot_12_LBL.setObjectName("PTab_Slot_12_LBL")
         self.PTab_gridLayout.addWidget(self.PTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.PTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
+        self.PTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_4)
         self.PTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_Manufacturer_TB.setObjectName("PTab_Manufacturer_TB")
         self.PTab_gridLayout.addWidget(self.PTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -662,7 +921,8 @@ class Ui_MainWindow(object):
         self.PTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_OLen_TB.setObjectName("PTab_OLen_TB")
         self.PTab_gridLayout.addWidget(self.PTab_OLen_TB, 6, 1, 1, 1)
-        self.PTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
+        self.PTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_4)
         self.PTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PTab_BarrelLen_TB.setObjectName("PTab_BarrelLen_TB")
         self.PTab_gridLayout.addWidget(self.PTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -722,16 +982,19 @@ class Ui_MainWindow(object):
         self.PTab_Slot_11_TB.setObjectName("PTab_Slot_11_TB")
         self.PTab_gridLayout.addWidget(self.PTab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_4 = QtWidgets.QWidget(self.PTab_tab)
-        self.verticalLayoutWidget_4.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_4.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_4.setObjectName("verticalLayoutWidget_4")
-        self.PTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_4)
+        self.PTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_4)
         self.PTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.PTab_verticalLayout.setObjectName("PTab_verticalLayout")
         self.PTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_4)
         self.PTab_Add_BTN.setDefault(True)
         self.PTab_Add_BTN.setObjectName("PTab_Add_BTN")
         self.PTab_verticalLayout.addWidget(self.PTab_Add_BTN)
-        self.PTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_4)
+        self.PTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_4)
         self.PTab_View_All_BTN.setAutoDefault(False)
         self.PTab_View_All_BTN.setDefault(True)
         self.PTab_View_All_BTN.setObjectName("PTab_View_All_BTN")
@@ -795,7 +1058,8 @@ class Ui_MainWindow(object):
         self.CTab_Picture_LBL = QtWidgets.QLabel(self.CTab_tab)
         self.CTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.CTab_Picture_LBL.setText("")
-        self.CTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.CTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.CTab_Picture_LBL.setScaledContents(True)
         self.CTab_Picture_LBL.setObjectName("CTab_Picture_LBL")
         self.formLayoutWidget_5 = QtWidgets.QWidget(self.CTab_tab)
@@ -820,7 +1084,8 @@ class Ui_MainWindow(object):
         self.CTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_5)
         self.CTab_Slot_7_LBL.setObjectName("CTab_Slot_7_LBL")
         self.CTab_gridLayout.addWidget(self.CTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.CTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_5)
+        self.CTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_5)
         self.CTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_TwistRate_TB.setObjectName("CTab_TwistRate_TB")
         self.CTab_gridLayout.addWidget(self.CTab_TwistRate_TB, 10, 1, 1, 1)
@@ -831,7 +1096,8 @@ class Ui_MainWindow(object):
         self.CTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_Name_TB.setObjectName("CTab_Name_TB")
         self.CTab_gridLayout.addWidget(self.CTab_Name_TB, 2, 1, 1, 1)
-        self.CTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_5)
+        self.CTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_5)
         self.CTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_ThreadSize_TB.setObjectName("CTab_ThreadSize_TB")
         self.CTab_gridLayout.addWidget(self.CTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -879,7 +1145,9 @@ class Ui_MainWindow(object):
         self.CTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_5)
         self.CTab_Weight_LBL.setObjectName("CTab_Weight_LBL")
         self.CTab_gridLayout.addWidget(self.CTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem3 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.CTab_gridLayout.addItem(spacerItem3, 34, 1, 1, 1)
         self.CTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_5)
         self.CTab_Action_LBL.setObjectName("CTab_Action_LBL")
@@ -899,7 +1167,8 @@ class Ui_MainWindow(object):
         self.CTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_5)
         self.CTab_Slot_12_LBL.setObjectName("CTab_Slot_12_LBL")
         self.CTab_gridLayout.addWidget(self.CTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.CTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_5)
+        self.CTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_5)
         self.CTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_Manufacturer_TB.setObjectName("CTab_Manufacturer_TB")
         self.CTab_gridLayout.addWidget(self.CTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -915,7 +1184,8 @@ class Ui_MainWindow(object):
         self.CTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_OLen_TB.setObjectName("CTab_OLen_TB")
         self.CTab_gridLayout.addWidget(self.CTab_OLen_TB, 6, 1, 1, 1)
-        self.CTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_5)
+        self.CTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_5)
         self.CTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.CTab_BarrelLen_TB.setObjectName("CTab_BarrelLen_TB")
         self.CTab_gridLayout.addWidget(self.CTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -975,16 +1245,19 @@ class Ui_MainWindow(object):
         self.CTab_Slot_11_TB.setObjectName("CTab_Slot_11_TB")
         self.CTab_gridLayout.addWidget(self.CTab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_5 = QtWidgets.QWidget(self.CTab_tab)
-        self.verticalLayoutWidget_5.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_5.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_5.setObjectName("verticalLayoutWidget_5")
-        self.CTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_5)
+        self.CTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_5)
         self.CTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.CTab_verticalLayout.setObjectName("CTab_verticalLayout")
         self.CTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
         self.CTab_Add_BTN.setDefault(True)
         self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
         self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
-        self.CTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
+        self.CTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_5)
         self.CTab_View_All_BTN.setAutoDefault(False)
         self.CTab_View_All_BTN.setDefault(True)
         self.CTab_View_All_BTN.setObjectName("CTab_View_All_BTN")
@@ -1048,7 +1321,8 @@ class Ui_MainWindow(object):
         self.PRTab_Picture_LBL = QtWidgets.QLabel(self.PRTab_tab)
         self.PRTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.PRTab_Picture_LBL.setText("")
-        self.PRTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.PRTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.PRTab_Picture_LBL.setScaledContents(True)
         self.PRTab_Picture_LBL.setObjectName("PRTab_Picture_LBL")
         self.formLayoutWidget_6 = QtWidgets.QWidget(self.PRTab_tab)
@@ -1073,7 +1347,8 @@ class Ui_MainWindow(object):
         self.PRTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Slot_7_LBL.setObjectName("PRTab_Slot_7_LBL")
         self.PRTab_gridLayout.addWidget(self.PRTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.PRTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+        self.PRTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_6)
         self.PRTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_TwistRate_TB.setObjectName("PRTab_TwistRate_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_TwistRate_TB, 10, 1, 1, 1)
@@ -1084,7 +1359,8 @@ class Ui_MainWindow(object):
         self.PRTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_Name_TB.setObjectName("PRTab_Name_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_Name_TB, 2, 1, 1, 1)
-        self.PRTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+        self.PRTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_6)
         self.PRTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_ThreadSize_TB.setObjectName("PRTab_ThreadSize_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -1132,7 +1408,9 @@ class Ui_MainWindow(object):
         self.PRTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Weight_LBL.setObjectName("PRTab_Weight_LBL")
         self.PRTab_gridLayout.addWidget(self.PRTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem4 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.PRTab_gridLayout.addItem(spacerItem4, 34, 1, 1, 1)
         self.PRTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Action_LBL.setObjectName("PRTab_Action_LBL")
@@ -1142,7 +1420,8 @@ class Ui_MainWindow(object):
         self.PRTab_gridLayout.addWidget(self.PRTab_Name_LBL, 2, 0, 1, 1)
         self.PRTab_Manufacturer_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Manufacturer_LBL.setObjectName("PRTab_Manufacturer_LBL")
-        self.PRTab_gridLayout.addWidget(self.PRTab_Manufacturer_LBL, 3, 0, 1, 1)
+        self.PRTab_gridLayout.addWidget(self.PRTab_Manufacturer_LBL, 3, 0, 1,
+                                        1)
         self.PRTab_Model_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Model_LBL.setObjectName("PRTab_Model_LBL")
         self.PRTab_gridLayout.addWidget(self.PRTab_Model_LBL, 4, 0, 1, 1)
@@ -1152,7 +1431,8 @@ class Ui_MainWindow(object):
         self.PRTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
         self.PRTab_Slot_12_LBL.setObjectName("PRTab_Slot_12_LBL")
         self.PRTab_gridLayout.addWidget(self.PRTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.PRTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+        self.PRTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_6)
         self.PRTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_Manufacturer_TB.setObjectName("PRTab_Manufacturer_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -1168,7 +1448,8 @@ class Ui_MainWindow(object):
         self.PRTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_OLen_TB.setObjectName("PRTab_OLen_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_OLen_TB, 6, 1, 1, 1)
-        self.PRTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+        self.PRTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_6)
         self.PRTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.PRTab_BarrelLen_TB.setObjectName("PRTab_BarrelLen_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -1228,16 +1509,19 @@ class Ui_MainWindow(object):
         self.PRTab_Slot_11_TB.setObjectName("PRTab_Slot_11_TB")
         self.PRTab_gridLayout.addWidget(self.PRTab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_6 = QtWidgets.QWidget(self.PRTab_tab)
-        self.verticalLayoutWidget_6.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_6.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_6.setObjectName("verticalLayoutWidget_6")
-        self.PRTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_6)
+        self.PRTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_6)
         self.PRTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.PRTab_verticalLayout.setObjectName("PRTab_verticalLayout")
         self.PRTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
         self.PRTab_Add_BTN.setDefault(True)
         self.PRTab_Add_BTN.setObjectName("PRTab_Add_BTN")
         self.PRTab_verticalLayout.addWidget(self.PRTab_Add_BTN)
-        self.PRTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
+        self.PRTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_6)
         self.PRTab_View_All_BTN.setAutoDefault(False)
         self.PRTab_View_All_BTN.setDefault(True)
         self.PRTab_View_All_BTN.setObjectName("PRTab_View_All_BTN")
@@ -1301,7 +1585,8 @@ class Ui_MainWindow(object):
         self.DTab_Picture_LBL = QtWidgets.QLabel(self.DTab_tab)
         self.DTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.DTab_Picture_LBL.setText("")
-        self.DTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.DTab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.DTab_Picture_LBL.setScaledContents(True)
         self.DTab_Picture_LBL.setObjectName("DTab_Picture_LBL")
         self.formLayoutWidget_7 = QtWidgets.QWidget(self.DTab_tab)
@@ -1326,7 +1611,8 @@ class Ui_MainWindow(object):
         self.DTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_7)
         self.DTab_Slot_7_LBL.setObjectName("DTab_Slot_7_LBL")
         self.DTab_gridLayout.addWidget(self.DTab_Slot_7_LBL, 21, 0, 1, 1)
-        self.DTab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_7)
+        self.DTab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_7)
         self.DTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_TwistRate_TB.setObjectName("DTab_TwistRate_TB")
         self.DTab_gridLayout.addWidget(self.DTab_TwistRate_TB, 10, 1, 1, 1)
@@ -1337,7 +1623,8 @@ class Ui_MainWindow(object):
         self.DTab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_Name_TB.setObjectName("DTab_Name_TB")
         self.DTab_gridLayout.addWidget(self.DTab_Name_TB, 2, 1, 1, 1)
-        self.DTab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_7)
+        self.DTab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_7)
         self.DTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_ThreadSize_TB.setObjectName("DTab_ThreadSize_TB")
         self.DTab_gridLayout.addWidget(self.DTab_ThreadSize_TB, 11, 1, 1, 1)
@@ -1385,7 +1672,9 @@ class Ui_MainWindow(object):
         self.DTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_7)
         self.DTab_Weight_LBL.setObjectName("DTab_Weight_LBL")
         self.DTab_gridLayout.addWidget(self.DTab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem5 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.DTab_gridLayout.addItem(spacerItem5, 34, 1, 1, 1)
         self.DTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_7)
         self.DTab_Action_LBL.setObjectName("DTab_Action_LBL")
@@ -1405,7 +1694,8 @@ class Ui_MainWindow(object):
         self.DTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_7)
         self.DTab_Slot_12_LBL.setObjectName("DTab_Slot_12_LBL")
         self.DTab_gridLayout.addWidget(self.DTab_Slot_12_LBL, 30, 0, 1, 1)
-        self.DTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_7)
+        self.DTab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_7)
         self.DTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_Manufacturer_TB.setObjectName("DTab_Manufacturer_TB")
         self.DTab_gridLayout.addWidget(self.DTab_Manufacturer_TB, 3, 1, 1, 1)
@@ -1421,7 +1711,8 @@ class Ui_MainWindow(object):
         self.DTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_OLen_TB.setObjectName("DTab_OLen_TB")
         self.DTab_gridLayout.addWidget(self.DTab_OLen_TB, 6, 1, 1, 1)
-        self.DTab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_7)
+        self.DTab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_7)
         self.DTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.DTab_BarrelLen_TB.setObjectName("DTab_BarrelLen_TB")
         self.DTab_gridLayout.addWidget(self.DTab_BarrelLen_TB, 7, 1, 1, 1)
@@ -1481,16 +1772,19 @@ class Ui_MainWindow(object):
         self.DTab_Slot_11_TB.setObjectName("DTab_Slot_11_TB")
         self.DTab_gridLayout.addWidget(self.DTab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_7 = QtWidgets.QWidget(self.DTab_tab)
-        self.verticalLayoutWidget_7.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_7.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_7.setObjectName("verticalLayoutWidget_7")
-        self.DTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_7)
+        self.DTab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_7)
         self.DTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.DTab_verticalLayout.setObjectName("DTab_verticalLayout")
         self.DTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_7)
         self.DTab_Add_BTN.setDefault(True)
         self.DTab_Add_BTN.setObjectName("DTab_Add_BTN")
         self.DTab_verticalLayout.addWidget(self.DTab_Add_BTN)
-        self.DTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_7)
+        self.DTab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_7)
         self.DTab_View_All_BTN.setAutoDefault(False)
         self.DTab_View_All_BTN.setDefault(True)
         self.DTab_View_All_BTN.setObjectName("DTab_View_All_BTN")
@@ -1554,7 +1848,8 @@ class Ui_MainWindow(object):
         self.STab_Picture_LBL = QtWidgets.QLabel(self.STab_tab)
         self.STab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.STab_Picture_LBL.setText("")
-        self.STab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        self.STab_Picture_LBL.setPixmap(
+            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
         self.STab_Picture_LBL.setScaledContents(True)
         self.STab_Picture_LBL.setObjectName("STab_Picture_LBL")
         self.formLayoutWidget_8 = QtWidgets.QWidget(self.STab_tab)
@@ -1579,7 +1874,8 @@ class Ui_MainWindow(object):
         self.STab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
         self.STab_Slot_7_LBL.setObjectName("STab_Slot_7_LBL")
         self.STab_gridLayout.addWidget(self.STab_Slot_7_LBL, 21, 0, 1, 1)
-        self.STab_TwistRate_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_8)
+        self.STab_TwistRate_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_8)
         self.STab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_TwistRate_TB.setObjectName("STab_TwistRate_TB")
         self.STab_gridLayout.addWidget(self.STab_TwistRate_TB, 10, 1, 1, 1)
@@ -1590,7 +1886,8 @@ class Ui_MainWindow(object):
         self.STab_Name_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_Name_TB.setObjectName("STab_Name_TB")
         self.STab_gridLayout.addWidget(self.STab_Name_TB, 2, 1, 1, 1)
-        self.STab_ThreadSize_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_8)
+        self.STab_ThreadSize_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_8)
         self.STab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_ThreadSize_TB.setObjectName("STab_ThreadSize_TB")
         self.STab_gridLayout.addWidget(self.STab_ThreadSize_TB, 11, 1, 1, 1)
@@ -1638,7 +1935,9 @@ class Ui_MainWindow(object):
         self.STab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
         self.STab_Weight_LBL.setObjectName("STab_Weight_LBL")
         self.STab_gridLayout.addWidget(self.STab_Weight_LBL, 8, 0, 1, 1)
-        spacerItem6 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem6 = QtWidgets.QSpacerItem(20, 40,
+                                            QtWidgets.QSizePolicy.Minimum,
+                                            QtWidgets.QSizePolicy.Expanding)
         self.STab_gridLayout.addItem(spacerItem6, 34, 1, 1, 1)
         self.STab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
         self.STab_Action_LBL.setObjectName("STab_Action_LBL")
@@ -1658,7 +1957,8 @@ class Ui_MainWindow(object):
         self.STab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
         self.STab_Slot_12_LBL.setObjectName("STab_Slot_12_LBL")
         self.STab_gridLayout.addWidget(self.STab_Slot_12_LBL, 30, 0, 1, 1)
-        self.STab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_8)
+        self.STab_Manufacturer_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_8)
         self.STab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_Manufacturer_TB.setObjectName("STab_Manufacturer_TB")
         self.STab_gridLayout.addWidget(self.STab_Manufacturer_TB, 3, 1, 1, 1)
@@ -1674,7 +1974,8 @@ class Ui_MainWindow(object):
         self.STab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_OLen_TB.setObjectName("STab_OLen_TB")
         self.STab_gridLayout.addWidget(self.STab_OLen_TB, 6, 1, 1, 1)
-        self.STab_BarrelLen_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_8)
+        self.STab_BarrelLen_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_8)
         self.STab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.STab_BarrelLen_TB.setObjectName("STab_BarrelLen_TB")
         self.STab_gridLayout.addWidget(self.STab_BarrelLen_TB, 7, 1, 1, 1)
@@ -1734,16 +2035,19 @@ class Ui_MainWindow(object):
         self.STab_Slot_11_TB.setObjectName("STab_Slot_11_TB")
         self.STab_gridLayout.addWidget(self.STab_Slot_11_TB, 28, 1, 1, 1)
         self.verticalLayoutWidget_8 = QtWidgets.QWidget(self.STab_tab)
-        self.verticalLayoutWidget_8.setGeometry(QtCore.QRect(490, 80, 160, 361))
+        self.verticalLayoutWidget_8.setGeometry(
+            QtCore.QRect(490, 80, 160, 361))
         self.verticalLayoutWidget_8.setObjectName("verticalLayoutWidget_8")
-        self.STab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_8)
+        self.STab_verticalLayout = QtWidgets.QVBoxLayout(
+            self.verticalLayoutWidget_8)
         self.STab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.STab_verticalLayout.setObjectName("STab_verticalLayout")
         self.STab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
         self.STab_Add_BTN.setDefault(True)
         self.STab_Add_BTN.setObjectName("STab_Add_BTN")
         self.STab_verticalLayout.addWidget(self.STab_Add_BTN)
-        self.STab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
+        self.STab_View_All_BTN = QtWidgets.QPushButton(
+            self.verticalLayoutWidget_8)
         self.STab_View_All_BTN.setAutoDefault(False)
         self.STab_View_All_BTN.setDefault(True)
         self.STab_View_All_BTN.setObjectName("STab_View_All_BTN")
@@ -1792,14 +2096,18 @@ class Ui_MainWindow(object):
         self.MTab_gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.MTab_gridLayout.setContentsMargins(0, 0, 0, 0)
         self.MTab_gridLayout.setObjectName("MTab_gridLayout")
-        self.MTab_ShotsOverTime_BTN = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.MTab_ShotsOverTime_BTN = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.MTab_ShotsOverTime_BTN.setDefault(True)
         self.MTab_ShotsOverTime_BTN.setObjectName("MTab_ShotsOverTime_BTN")
         self.MTab_gridLayout.addWidget(self.MTab_ShotsOverTime_BTN, 1, 4, 1, 1)
-        self.MTab_Plot_Shots_Powder_Charge = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.MTab_Plot_Shots_Powder_Charge = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.MTab_Plot_Shots_Powder_Charge.setDefault(True)
-        self.MTab_Plot_Shots_Powder_Charge.setObjectName("MTab_Plot_Shots_Powder_Charge")
-        self.MTab_gridLayout.addWidget(self.MTab_Plot_Shots_Powder_Charge, 0, 3, 1, 1)
+        self.MTab_Plot_Shots_Powder_Charge.setObjectName(
+            "MTab_Plot_Shots_Powder_Charge")
+        self.MTab_gridLayout.addWidget(self.MTab_Plot_Shots_Powder_Charge, 0,
+                                       3, 1, 1)
         self.MTab_BTN_20 = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.MTab_BTN_20.setDefault(True)
         self.MTab_BTN_20.setObjectName("MTab_BTN_20")
@@ -1868,14 +2176,19 @@ class Ui_MainWindow(object):
         self.MTab_BTN_3.setDefault(True)
         self.MTab_BTN_3.setObjectName("MTab_BTN_3")
         self.MTab_gridLayout.addWidget(self.MTab_BTN_3, 0, 2, 1, 1)
-        self.MTab_Plot_Powder_Speed_Multi = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.MTab_Plot_Powder_Speed_Multi = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.MTab_Plot_Powder_Speed_Multi.setDefault(True)
-        self.MTab_Plot_Powder_Speed_Multi.setObjectName("MTab_Plot_Powder_Speed_Multi")
-        self.MTab_gridLayout.addWidget(self.MTab_Plot_Powder_Speed_Multi, 0, 0, 1, 1)
-        self.MTab_ShotsPerFirearm_BTN = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.MTab_Plot_Powder_Speed_Multi.setObjectName(
+            "MTab_Plot_Powder_Speed_Multi")
+        self.MTab_gridLayout.addWidget(self.MTab_Plot_Powder_Speed_Multi, 0, 0,
+                                       1, 1)
+        self.MTab_ShotsPerFirearm_BTN = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.MTab_ShotsPerFirearm_BTN.setDefault(True)
         self.MTab_ShotsPerFirearm_BTN.setObjectName("MTab_ShotsPerFirearm_BTN")
-        self.MTab_gridLayout.addWidget(self.MTab_ShotsPerFirearm_BTN, 0, 4, 1, 1)
+        self.MTab_gridLayout.addWidget(self.MTab_ShotsPerFirearm_BTN, 0, 4, 1,
+                                       1)
         self.MTab_BTN_14 = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.MTab_BTN_14.setDefault(True)
         self.MTab_BTN_14.setObjectName("MTab_BTN_14")
@@ -1904,10 +2217,13 @@ class Ui_MainWindow(object):
         self.MTab_BTN_17.setDefault(True)
         self.MTab_BTN_17.setObjectName("MTab_BTN_17")
         self.MTab_gridLayout.addWidget(self.MTab_BTN_17, 3, 1, 1, 1)
-        self.MTab_Plot_Powder_Speed_Single = QtWidgets.QPushButton(self.gridLayoutWidget)
+        self.MTab_Plot_Powder_Speed_Single = QtWidgets.QPushButton(
+            self.gridLayoutWidget)
         self.MTab_Plot_Powder_Speed_Single.setDefault(True)
-        self.MTab_Plot_Powder_Speed_Single.setObjectName("MTab_Plot_Powder_Speed_Single")
-        self.MTab_gridLayout.addWidget(self.MTab_Plot_Powder_Speed_Single, 1, 0, 1, 1)
+        self.MTab_Plot_Powder_Speed_Single.setObjectName(
+            "MTab_Plot_Powder_Speed_Single")
+        self.MTab_gridLayout.addWidget(self.MTab_Plot_Powder_Speed_Single, 1,
+                                       0, 1, 1)
         self.MTab_BTN_36 = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.MTab_BTN_36.setDefault(True)
         self.MTab_BTN_36.setObjectName("MTab_BTN_36")
@@ -2006,7 +2322,8 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.FTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.FTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.FTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.FTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.FTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.FTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2020,9 +2337,11 @@ class Ui_MainWindow(object):
         self.FTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.FTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.FTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.FTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.FTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.FTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.FTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.FTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.FTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.FTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.FTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2031,7 +2350,8 @@ class Ui_MainWindow(object):
         self.FTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.FTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
         self.FTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.FTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.FTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.FTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.FTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.FTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2042,12 +2362,14 @@ class Ui_MainWindow(object):
         self.FTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
         self.FTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.FTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.FTab_tab), _translate("MainWindow", "Firearms"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.FTab_tab),
+                                  _translate("MainWindow", "Firearms"))
         self.BTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.BTab_Bullet_LBL.setText(_translate("MainWindow", "Bullet"))
         self.BTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.BTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.BTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.BTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.BTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.BTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.BTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2061,9 +2383,11 @@ class Ui_MainWindow(object):
         self.BTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.BTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.BTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.BTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.BTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.BTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.BTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.BTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.BTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.BTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.BTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2071,7 +2395,8 @@ class Ui_MainWindow(object):
         self.BTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.BTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.BTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.BTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.BTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.BTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.BTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.BTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2080,12 +2405,14 @@ class Ui_MainWindow(object):
         self.BTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.BTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.BTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.BTab_tab), _translate("MainWindow", "Bullets"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.BTab_tab),
+                                  _translate("MainWindow", "Bullets"))
         self.PTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.PTab_Powder_LBL.setText(_translate("MainWindow", "Powder"))
         self.PTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.PTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.PTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.PTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.PTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.PTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.PTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2099,9 +2426,11 @@ class Ui_MainWindow(object):
         self.PTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.PTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.PTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.PTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.PTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.PTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.PTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.PTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.PTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.PTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.PTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2109,7 +2438,8 @@ class Ui_MainWindow(object):
         self.PTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.PTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.PTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.PTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.PTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.PTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.PTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.PTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2118,12 +2448,14 @@ class Ui_MainWindow(object):
         self.PTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.PTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.PTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.PTab_tab), _translate("MainWindow", "Powders"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.PTab_tab),
+                                  _translate("MainWindow", "Powders"))
         self.CTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.CTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
         self.CTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.CTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.CTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.CTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.CTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.CTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.CTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2137,9 +2469,11 @@ class Ui_MainWindow(object):
         self.CTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.CTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.CTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.CTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.CTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.CTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.CTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.CTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.CTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.CTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.CTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2147,7 +2481,8 @@ class Ui_MainWindow(object):
         self.CTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.CTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.CTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.CTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.CTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.CTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.CTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.CTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2156,12 +2491,15 @@ class Ui_MainWindow(object):
         self.CTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.CTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.CTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.CTab_tab), _translate("MainWindow", "Cases"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.CTab_tab),
+                                  _translate("MainWindow", "Cases"))
         self.PRTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.PRTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
         self.PRTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
-        self.PRTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.PRTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.PRTab_TwistRate_LBL.setText(
+            _translate("MainWindow", "Twist Rate"))
+        self.PRTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.PRTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.PRTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.PRTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2175,9 +2513,11 @@ class Ui_MainWindow(object):
         self.PRTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.PRTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.PRTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.PRTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.PRTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.PRTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.PRTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.PRTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.PRTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.PRTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.PRTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2185,7 +2525,8 @@ class Ui_MainWindow(object):
         self.PRTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.PRTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.PRTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.PRTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.PRTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.PRTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.PRTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.PRTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2194,12 +2535,14 @@ class Ui_MainWindow(object):
         self.PRTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.PRTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.PRTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.PRTab_tab), _translate("MainWindow", "Primers"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.PRTab_tab),
+                                  _translate("MainWindow", "Primers"))
         self.DTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.DTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
         self.DTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.DTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.DTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.DTab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.DTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.DTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.DTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2213,9 +2556,11 @@ class Ui_MainWindow(object):
         self.DTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.DTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.DTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.DTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.DTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.DTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.DTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.DTab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.DTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.DTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.DTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2223,7 +2568,8 @@ class Ui_MainWindow(object):
         self.DTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.DTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.DTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.DTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.DTab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.DTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.DTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.DTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2232,12 +2578,14 @@ class Ui_MainWindow(object):
         self.DTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.DTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.DTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.DTab_tab), _translate("MainWindow", "Data"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.DTab_tab),
+                                  _translate("MainWindow", "Data"))
         self.STab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.STab_SILIENCER_LBL.setText(_translate("MainWindow", "Firearm"))
         self.STab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.STab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-        self.STab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+        self.STab_ThreadSize_LBL.setText(
+            _translate("MainWindow", "Thread Size"))
         self.STab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
         self.STab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
         self.STab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
@@ -2251,9 +2599,11 @@ class Ui_MainWindow(object):
         self.STab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
         self.STab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
         self.STab_Name_LBL.setText(_translate("MainWindow", "Name"))
-        self.STab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.STab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.STab_Model_LBL.setText(_translate("MainWindow", "Model"))
-        self.STab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
+        self.STab_BarrelLen_LBL.setText(
+            _translate("MainWindow", "Barrel Length"))
         self.STab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
         self.STab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
         self.STab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
@@ -2261,7 +2611,8 @@ class Ui_MainWindow(object):
         self.STab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.STab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
         self.STab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-        self.STab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+        self.STab_View_All_BTN.setText(
+            _translate("MainWindow", "View All Firearms"))
         self.STab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.STab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.STab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2270,9 +2621,12 @@ class Ui_MainWindow(object):
         self.STab_BTN_8.setText(_translate("MainWindow", "Button 8"))
         self.STab_BTN_9.setText(_translate("MainWindow", "Button 9"))
         self.STab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.STab_tab), _translate("MainWindow", "Silencers"))
-        self.MTab_ShotsOverTime_BTN.setText(_translate("MainWindow", "Shots Over Time"))
-        self.MTab_Plot_Shots_Powder_Charge.setText(_translate("MainWindow", "Shots Per Powder Charge"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.STab_tab),
+                                  _translate("MainWindow", "Silencers"))
+        self.MTab_ShotsOverTime_BTN.setText(
+            _translate("MainWindow", "Shots Over Time"))
+        self.MTab_Plot_Shots_Powder_Charge.setText(
+            _translate("MainWindow", "Shots Per Powder Charge"))
         self.MTab_BTN_20.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_23.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_2.setText(_translate("MainWindow", "PushButton"))
@@ -2290,8 +2644,10 @@ class Ui_MainWindow(object):
         self.MTab_BTN_29.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_15.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_3.setText(_translate("MainWindow", "PushButton"))
-        self.MTab_Plot_Powder_Speed_Multi.setText(_translate("MainWindow", "Plot Powder Speed Multi"))
-        self.MTab_ShotsPerFirearm_BTN.setText(_translate("MainWindow", "Shots Per Firearm"))
+        self.MTab_Plot_Powder_Speed_Multi.setText(
+            _translate("MainWindow", "Plot Powder Speed Multi"))
+        self.MTab_ShotsPerFirearm_BTN.setText(
+            _translate("MainWindow", "Shots Per Firearm"))
         self.MTab_BTN_14.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_18.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_8.setText(_translate("MainWindow", "PushButton"))
@@ -2299,7 +2655,8 @@ class Ui_MainWindow(object):
         self.MTab_BTN_19.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_24.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_17.setText(_translate("MainWindow", "PushButton"))
-        self.MTab_Plot_Powder_Speed_Single.setText(_translate("MainWindow", "Plot Powder Speed Single"))
+        self.MTab_Plot_Powder_Speed_Single.setText(
+            _translate("MainWindow", "Plot Powder Speed Single"))
         self.MTab_BTN_36.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_16.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_13.setText(_translate("MainWindow", "PushButton"))
@@ -2321,11 +2678,13 @@ class Ui_MainWindow(object):
         self.MTab_BTN_40.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_45.setText(_translate("MainWindow", "PushButton"))
         self.MTab_BTN_50.setText(_translate("MainWindow", "PushButton"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.MTab_tab), _translate("MainWindow", "Metrics"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.MTab_tab),
+                                  _translate("MainWindow", "Metrics"))
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
