@@ -14,6 +14,7 @@ class ShowAllFirearms_PopUp(QWidget):
     This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window.
     """
+
     def config_query(self, query, text, return_value):
         # save to DataFrame
         df = pd.read_sql(query, self.conn)
@@ -55,6 +56,59 @@ class ShowAllFirearms_PopUp(QWidget):
         layout = QVBoxLayout()
         self.label = QLabel(self)
         self.label.setText(firearm_df['Name'].to_string(index=False))
+        self.label.setStyleSheet("border: 1px solid black;")
+        self.label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+
+class ShowAllBullets_PopUp(QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window.
+    """
+
+    def config_query(self, query, text, return_value):
+        # save to DataFrame
+        df = pd.read_sql(query, self.conn)
+
+        if return_value == 'None':
+            pass
+        elif return_value == 'True':
+            # print the query
+            print("Query = ", query)
+
+            # print the number of rows
+            rows = df.shape[0]
+            print('{}{}\n'.format(text, rows))
+
+            print(df.to_string(max_rows=5))
+        return df
+
+    def __init__(self):
+        # set run parameters
+        self.parser = ConfigParser()
+        self.parser.read("./Tracker.ini")
+
+        self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
+                                            user=self.parser['SQL']['user'],
+                                            password=self.parser['SQL'][
+                                                'password'],
+                                            database=self.parser['SQL'][
+                                                'database'],
+                                            auth_plugin=self.parser['SQL'][
+                                                'auth_plugin']
+                                            )
+        super().__init__()
+        df = self.config_query(
+            "SELECT * FROM Configuration_V1.Bullet",
+            "Number of Powders = ",
+            "None")
+
+        self.setWindowTitle("List of Bullets")
+        layout = QVBoxLayout()
+        self.label = QLabel(self)
+        self.label.setText(df['Name'].to_string(index=False))
         self.label.setStyleSheet("border: 1px solid black;")
         self.label.setAlignment(Qt.AlignLeft)
         layout.addWidget(self.label)
@@ -152,6 +206,13 @@ class Ui_MainWindow(object):
             print("Exception = ", str(e))
             traceback.print_exc()
 
+    def PopUp_ShowAllFirearms(self, checked):
+        if self.FTab_ShowFirearms_POP.isVisible():
+            self.FTab_ShowFirearms_POP.hide()
+
+        else:
+            self.FTab_ShowFirearms_POP.show()
+
     def displayData_BTab(self):
         try:
             # get the value from the Firearm comboBox
@@ -217,6 +278,13 @@ class Ui_MainWindow(object):
             print("Exception = ", str(e))
             traceback.print_exc()
 
+    def PopUp_ShowAllBullets(self, checked):
+        if self.BTab_ShowBullets_POP.isVisible():
+            self.BTab_ShowBullets_POP.hide()
+
+        else:
+            self.BTab_ShowBullets_POP.show()
+
     def displayData_PTab(self):
         pass
 
@@ -237,13 +305,6 @@ class Ui_MainWindow(object):
 
     def displayData_PTab(self):
         pass
-
-    def PopUp_ShowAllFirearms(self, checked):
-        if self.FTab_ShowFirearms_POP.isVisible():
-            self.FTab_ShowFirearms_POP.hide()
-
-        else:
-            self.FTab_ShowFirearms_POP.show()
 
     def setupUi(self, MainWindow):
         firearms_df = self.config_query(
@@ -285,7 +346,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
         self.tabWidget.setObjectName("tabWidget")
 
-        # BTab --------------------------------
+        # FTab --------------------------------
         self.FTab_tab = QtWidgets.QWidget()
         self.FTab_tab.setObjectName("FTab_tab")
         self.formLayoutWidget_2 = QtWidgets.QWidget(self.FTab_tab)
@@ -490,7 +551,6 @@ class Ui_MainWindow(object):
         self.FTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.FTab_verticalLayout.setObjectName("FTab_verticalLayout")
 
-
         self.FTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.FTab_Add_BTN.setDefault(True)
         self.FTab_Add_BTN.setObjectName("FTab_Add_BTN")
@@ -504,7 +564,6 @@ class Ui_MainWindow(object):
         self.FTab_View_All_BTN.setObjectName("FTab_View_All_BTN")
         self.FTab_ShowFirearms_POP = ShowAllFirearms_PopUp()
         self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
-
 
         self.FTab_verticalLayout.addWidget(self.FTab_View_All_BTN)
         self.FTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
@@ -631,7 +690,8 @@ class Ui_MainWindow(object):
         self.BTab_Manufacturer_LBL.setObjectName("BTab_Manufacturer_LBL")
         self.BTab_gridLayout.addWidget(self.BTab_Manufacturer_LBL, 1, 0, 1, 1)
         # BTab Size_Inch
-        self.BTab_Size_Inch_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_3)
+        self.BTab_Size_Inch_TB = QtWidgets.QTextBrowser(
+            self.formLayoutWidget_3)
         self.BTab_Size_Inch_TB.setMaximumSize(QtCore.QSize(362, 26))
         self.BTab_Size_Inch_TB.setObjectName("BTab_Size_Inch_TB")
         self.BTab_gridLayout.addWidget(self.BTab_Size_Inch_TB, 2, 1, 1, 1)
@@ -815,6 +875,7 @@ class Ui_MainWindow(object):
         self.BTab_ShowData_BTN.setDefault(True)
         self.BTab_ShowData_BTN.setObjectName("BTab_ShowData_BTN")
         self.BTab_ShowData_BTN.clicked.connect(self.displayData_BTab)
+
         # BTab Add BTN
         self.BTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         self.BTab_Add_BTN.setDefault(True)
@@ -827,6 +888,8 @@ class Ui_MainWindow(object):
         self.BTab_View_All_BTN.setDefault(True)
         self.BTab_View_All_BTN.setObjectName("BTab_View_All_BTN")
         self.BTab_verticalLayout.addWidget(self.BTab_View_All_BTN)
+        self.BTab_ShowBullets_POP = ShowAllBullets_PopUp()
+        self.BTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllBullets)
         # BTab BTN 3
         self.BTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         self.BTab_BTN_3.setDefault(True)
@@ -2476,6 +2539,7 @@ class Ui_MainWindow(object):
         self.FTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.FTab_tab),
                                   _translate("MainWindow", "Firearms"))
+        # BTab-------------------------
         self.BTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
         self.BTab_Bullet_LBL.setText(_translate("MainWindow", "Bullet"))
         self.BTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
@@ -2490,7 +2554,8 @@ class Ui_MainWindow(object):
         self.BTab_Slot_9_LBL.setText(_translate("MainWindow", "Slot 9"))
         self.BTab_Type_LBL.setText(_translate("MainWindow", "Type"))
         self.BTab_SKU_LBL.setText(_translate("MainWindow", "SKU"))
-        self.BTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+        self.BTab_Manufacturer_LBL.setText(
+            _translate("MainWindow", "Manufacturer"))
         self.BTab_Name_LBL.setText(_translate("MainWindow", "Name"))
         self.BTab_BBase_LBL.setText(_translate("MainWindow", "Bullet Base"))
         self.BTab_BC_LBL.setText(_translate("MainWindow", "BC"))
@@ -2504,9 +2569,9 @@ class Ui_MainWindow(object):
         self.BTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 2"))
         self.BTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.BTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
-        self.BTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
+        self.BTab_Add_BTN.setText(_translate("MainWindow", "Add Bullet"))
         self.BTab_View_All_BTN.setText(
-            _translate("MainWindow", "View All Firearms"))
+            _translate("MainWindow", "View All Bullets"))
         self.BTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.BTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.BTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
