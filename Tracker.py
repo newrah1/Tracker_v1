@@ -169,6 +169,60 @@ class ShowAllPowders_PopUp(QWidget):
         self.setLayout(layout)
 
 
+class ShowAllCases_PopUp(QWidget):
+    """
+    This "window" is a QWidget. If it has no parent, it
+    will appear as a free-floating window.
+    """
+
+    def config_query(self, query, text, return_value):
+        # save to DataFrame
+        df = pd.read_sql(query, self.conn)
+
+        if return_value == 'None':
+            pass
+        elif return_value == 'True':
+            # print the query
+            print("Query = ", query)
+
+            # print the number of rows
+            rows = df.shape[0]
+            print('{}{}\n'.format(text, rows))
+
+            print(df.to_string(max_rows=5))
+        return df
+
+    def __init__(self):
+        # set run parameters
+        self.parser = ConfigParser()
+        self.parser.read("./Tracker.ini")
+
+        self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
+                                            user=self.parser['SQL']['user'],
+                                            password=self.parser['SQL'][
+                                                'password'],
+                                            database=self.parser['SQL'][
+                                                'database'],
+                                            auth_plugin=self.parser['SQL'][
+                                                'auth_plugin']
+                                            )
+
+        super().__init__()
+        df = self.config_query(
+            "SELECT * FROM Configuration_V1.Case",
+            "Number of Case = ",
+            "None")
+
+        self.setWindowTitle("List of Case")
+        layout = QVBoxLayout()
+        self.label = QLabel(self)
+        self.label.setText(df['Name'].to_string(index=False))
+        self.label.setStyleSheet("border: 1px solid black;")
+        self.label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+
 class Ui_MainWindow(object):
     def __init__(self):
         # set run parameters
@@ -351,6 +405,13 @@ class Ui_MainWindow(object):
 
     def displayData_CTab(self):
         pass
+
+    def PopUp_ShowAllCases(self, checked):
+        if self.CTab_ShowCases_POP.isVisible():
+            self.CTab_ShowCases_POP.hide()
+
+        else:
+            self.CTab_ShowCases_POP.show()
 
     def displayData_PRTab(self):
         pass
@@ -1496,12 +1557,16 @@ class Ui_MainWindow(object):
         self.CTab_Add_BTN.setDefault(True)
         self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
         self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
+        # CTab View All BTN
         self.CTab_View_All_BTN = QtWidgets.QPushButton(
             self.verticalLayoutWidget_5)
         self.CTab_View_All_BTN.setAutoDefault(False)
         self.CTab_View_All_BTN.setDefault(True)
         self.CTab_View_All_BTN.setObjectName("CTab_View_All_BTN")
         self.CTab_verticalLayout.addWidget(self.CTab_View_All_BTN)
+        self.CTab_ShowCases_POP = ShowAllCases_PopUp()
+        self.CTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllCases)
+
         self.CTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
         self.CTab_BTN_3.setDefault(True)
         self.CTab_BTN_3.setObjectName("CTab_BTN_3")
