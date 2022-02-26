@@ -32,11 +32,18 @@ class ShowAllFirearms_PopUp(QWidget):
         return df
 
     def __init__(self):
-        self.conn = mysql.connector.connect(host="localhost",
-                                            user='Tracker',
-                                            password='Tracker',
-                                            database='Configuration_V1',
-                                            auth_plugin='mysql_native_password'
+        # set run parameters
+        self.parser = ConfigParser()
+        self.parser.read("./Tracker.ini")
+
+        self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
+                                            user=self.parser['SQL']['user'],
+                                            password=self.parser['SQL'][
+                                                'password'],
+                                            database=self.parser['SQL'][
+                                                'database'],
+                                            auth_plugin=self.parser['SQL'][
+                                                'auth_plugin']
                                             )
         super().__init__()
         firearm_df = self.config_query(
@@ -59,8 +66,6 @@ class Ui_MainWindow(object):
         # set run parameters
         self.parser = ConfigParser()
         self.parser.read("./Tracker.ini")
-
-        print(self.parser['SQL']['host'])
 
         self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
                                             user=self.parser['SQL']['user'],
