@@ -310,6 +310,21 @@ class Ui_MainWindow(object):
             print(df.to_string(max_rows=5))
         return df
 
+    def query_databases(self):
+        try:
+            firearm_db = pd.read_sql("SELECT * FROM Configuration_V1.Firearm",
+                                     self.conn)
+            bullets_db = pd.read_sql("SELECT * FROM Configuration_V1.bullet",
+                                     self.conn)
+            powders_db = pd.read_sql("SELECT * FROM Configuration_V1.powder",
+                                     self.conn)
+            cases_db = pd.read_sql("SELECT * FROM Configuration_V1.case",
+                                   self.conn)
+            return firearm_db, bullets_db, powders_db, cases_db
+        except Exception as e:
+            print("Exception = ", str(e))
+            traceback.print_exc()
+
     def displayData_FTab(self):
         try:
             # get the value from the Firearm comboBox
@@ -363,6 +378,9 @@ class Ui_MainWindow(object):
                     index=False))
 
             # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
+            self.FTab_Picture_LBL.setPixmap(
+                QtGui.QPixmap("./picts/Savage_110_Elite_Precision.png")
+            )
 
         except Exception as e:
             print("Exception = ", str(e))
@@ -489,32 +507,18 @@ class Ui_MainWindow(object):
         pass
 
     def setupUi(self, MainWindow):
-        firearms_df = self.config_query(
-            "SELECT * FROM Configuration_V1.Firearm",
-            "Number of Configurations = ",
-            "None")
+
+        firearms_df, bullets_df, powders_df, cases_df= self.query_databases()
 
         firearms_unique = firearms_df['Name'].unique()
         firearms_list = firearms_unique.tolist()
 
-        bullets_df = self.config_query(
-            "SELECT * FROM Configuration_V1.bullet",
-            "Number of Bullets = ",
-            "None")
         bullets_unique = bullets_df['Name'].unique()
         bullets_list = bullets_unique.tolist()
 
-        powders_df = self.config_query(
-            "SELECT * FROM Configuration_V1.powder",
-            "Number of Powders = ",
-            "None")
         powders_unique = powders_df['Name'].unique()
         powders_list = powders_unique.tolist()
 
-        cases_df = self.config_query(
-            "SELECT * FROM Configuration_V1.case",
-            "Number of Cases = ",
-            "None")
         cases_unique = cases_df['Name'].unique()
         cases_list = cases_unique.tolist()
 
@@ -826,8 +830,9 @@ class Ui_MainWindow(object):
         self.FTab_Picture_LBL = QtWidgets.QLabel(self.FTab_tab)
         self.FTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
         self.FTab_Picture_LBL.setText("")
-        self.FTab_Picture_LBL.setPixmap(
-            QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+        #self.FTab_Picture_LBL.setPixmap(
+            #QtGui.QPixmap(firearms_df['Picture']))
+        #    QtGui.QPixmap("./picts/Savage_110_Elite_Precision.png"))
         self.FTab_Picture_LBL.setScaledContents(True)
         self.FTab_Picture_LBL.setObjectName("FTab_Picture_LBL")
         # FTab ShowData
