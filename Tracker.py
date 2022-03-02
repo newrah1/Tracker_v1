@@ -327,6 +327,7 @@ class Ui_MainWindow(object):
             print("Exception = ", str(e))
             traceback.print_exc()
 
+    # FTab --------------------------------
     def displayData_FTab(self):
         try:
             # get the value from the Firearm comboBox
@@ -378,11 +379,13 @@ class Ui_MainWindow(object):
             with option_context('display.max_colwidth', None):
                 self.FTab_Notes_TB.setText(firearm_df['Notes'].to_string(
                     index=False))
+            high_rez = QtCore.QSize(400, 400)
+            pixmap = QtGui.QPixmap(firearm_df['Picture'].to_string(index=False))
+            pixmap = pixmap.scaled(high_rez,
+                                   aspectRatioMode=QtCore.Qt.KeepAspectRatio,
+                                   transformMode=Qt.SmoothTransformation)
+            self.FTab_Picture_LBL.setPixmap(pixmap)
 
-            # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
-            self.FTab_Picture_LBL.setPixmap(
-                QtGui.QPixmap("./picts/Savage_110_Elite_Precision.png")
-            )
 
         except Exception as e:
             print("Exception = ", str(e))
@@ -394,7 +397,9 @@ class Ui_MainWindow(object):
 
         else:
             self.FTab_ShowFirearms_POP.show()
+    # FTab --------------------------------
 
+    # BTab --------------------------------
     def displayData_BTab(self):
         try:
             # get the value from the Firearm comboBox
@@ -466,7 +471,9 @@ class Ui_MainWindow(object):
 
         else:
             self.BTab_ShowBullets_POP.show()
+    # BTab --------------------------------
 
+    # PTab --------------------------------
     def displayData_PTab(self):
         pass
 
@@ -476,7 +483,9 @@ class Ui_MainWindow(object):
 
         else:
             self.PTab_ShowPowders_POP.show()
+    # PTab --------------------------------
 
+    # CTab --------------------------------
     def displayData_CTab(self):
         pass
 
@@ -486,13 +495,19 @@ class Ui_MainWindow(object):
 
         else:
             self.CTab_ShowCases_POP.show()
+    # CTab --------------------------------
 
+    # PRTab --------------------------------
     def displayData_PRTab(self):
         pass
+    # PRTab --------------------------------
 
+    # DTab --------------------------------
     def displayData_DTab(self):
         pass
+    # DTab --------------------------------
 
+    # STab --------------------------------
     def displayData_STab(self):
         pass
 
@@ -501,12 +516,12 @@ class Ui_MainWindow(object):
             self.STab_ShowSilencers_POP.hide()
         else:
             self.STab_ShowSilencers_POP.show()
+    # STab --------------------------------
 
+    # MTab --------------------------------
     def displayData_MTab(self):
         pass
-
-    def displayData_PTab(self):
-        pass
+    # MTab --------------------------------
 
     def setupUi(self, MainWindow):
         # retrieve data from MySQL
@@ -517,6 +532,7 @@ class Ui_MainWindow(object):
         powders_list = powders_df['Name'].unique().tolist()
         cases_list = cases_df['Name'].unique().tolist()
 
+        # Main Window setup
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1112, 1009)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
