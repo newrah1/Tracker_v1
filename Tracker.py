@@ -4,10 +4,15 @@ import pandas as pd
 from configparser import ConfigParser
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import  QVBoxLayout, QSizePolicy,  QWidget
+from PyQt5.QtGui import QIcon
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 from pandas import option_context
-
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import random
 
 class ShowAllFirearms_PopUp(QWidget):
     """
@@ -276,6 +281,29 @@ class ShowAllSilencers_PopUp(QWidget):
         layout.addWidget(self.label)
         self.setLayout(layout)
 
+class PlotCanvas(FigureCanvas):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+
+        FigureCanvas.__init__(self, fig)
+        self.setParent(parent)
+
+        FigureCanvas.setSizePolicy(self,
+                QSizePolicy.Expanding,
+                QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+        self.plot()
+
+
+    def plot(self):
+        data = [random.random() for i in range(25)]
+        ax = self.figure.add_subplot(111)
+        ax.plot(data, 'r-')
+        ax.set_title('PyQt Matplotlib Example')
+        self.draw()
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -379,13 +407,11 @@ class Ui_MainWindow(object):
             with option_context('display.max_colwidth', None):
                 self.FTab_Notes_TB.setText(firearm_df['Notes'].to_string(
                     index=False))
+            # Display picture of firearm in GUI
             high_rez = QtCore.QSize(400, 400)
             pixmap = QtGui.QPixmap(firearm_df['Picture'].to_string(index=False))
-            pixmap = pixmap.scaled(high_rez,
-                                   aspectRatioMode=QtCore.Qt.KeepAspectRatio,
-                                   transformMode=Qt.SmoothTransformation)
+            pixmap = pixmap.scaled(high_rez)
             self.FTab_Picture_LBL.setPixmap(pixmap)
-
 
         except Exception as e:
             print("Exception = ", str(e))
@@ -397,6 +423,13 @@ class Ui_MainWindow(object):
 
         else:
             self.FTab_ShowFirearms_POP.show()
+
+    def PopUp_Canvas_Test(self, checked):
+        if self.FTab_BTN_3_POP.isVisible():
+            self.FTab_BTN_3_POP.hide()
+
+        else:
+            self.FTab_BTN_3_POP.show()
     # FTab --------------------------------
 
     # BTab --------------------------------
@@ -458,8 +491,13 @@ class Ui_MainWindow(object):
             with option_context('display.max_colwidth', None):
                 self.BTab_Notes_TB.setText(bullet_df['Notes'].to_string(
                     index=False))
-
-            # self.FTab_graphics.s = QPixmap(Selected_Firearm['Picture'].to_string(index=False))x
+                print(bullet_df)
+                # Display picture of Bullet in GUI
+                high_rez = QtCore.QSize(400, 400)
+                pixmap = QtGui.QPixmap(
+                    bullet_df['Picture'].to_string(index=False))
+                pixmap = pixmap.scaled(high_rez)
+                self.BTab_Picture_LBL.setPixmap(pixmap)
 
         except Exception as e:
             print("Exception = ", str(e))
@@ -790,6 +828,9 @@ class Ui_MainWindow(object):
         self.FTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.FTab_BTN_3.setDefault(True)
         self.FTab_BTN_3.setObjectName("FTab_BTN_3")
+        self.FTab_verticalLayout.addWidget(self.FTab_BTN_3)
+        self.FTab_BTN_3_POP = PlotCanvas()
+        self.FTab_BTN_3.clicked.connect(self.PopUp_Canvas_Test)
         self.FTab_verticalLayout.addWidget(self.FTab_BTN_3)
         # FTab BTN 4
         self.FTab_BTN_4 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
