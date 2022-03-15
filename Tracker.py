@@ -13,6 +13,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 import random
+import sys
 
 class ShowAllFirearms_PopUp(QWidget):
     """
@@ -228,6 +229,66 @@ class ShowAllCases_PopUp(QWidget):
         self.setLayout(layout)
 
 
+class CTab_Add_Data_PopUp(QWidget):
+
+    def setupUi(self, PopUp_Case_Add):
+        PopUp_Case_Add.setObjectName("PopUp_Case_Add")
+        PopUp_Case_Add.resize(611, 524)
+        self.gridLayoutWidget = QtWidgets.QWidget(PopUp_Case_Add)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 551, 432))
+        self.gridLayoutWidget.setObjectName("gridLayoutWidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.textBrowser_3 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.textBrowser_3.setObjectName("textBrowser_3")
+        self.gridLayout.addWidget(self.textBrowser_3, 2, 1, 1, 1)
+        self.label_3 = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+        self.textBrowser_2 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.textBrowser_2.setObjectName("textBrowser_2")
+        self.gridLayout.addWidget(self.textBrowser_2, 1, 1, 1, 1)
+        self.textBrowser_4 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.textBrowser_4.setObjectName("textBrowser_4")
+        self.gridLayout.addWidget(self.textBrowser_4, 3, 1, 1, 1)
+        self.label = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.label_2 = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
+        self.label_4 = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label_4.setObjectName("label_4")
+        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+        self.textBrowser_5 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.textBrowser_5.setObjectName("textBrowser_5")
+        self.gridLayout.addWidget(self.textBrowser_5, 4, 1, 1, 1)
+        self.label_5 = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.label_5.setObjectName("label_5")
+        self.gridLayout.addWidget(self.label_5, 4, 0, 1, 1)
+        self.textBrowser = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.textBrowser.setObjectName("textBrowser")
+        self.gridLayout.addWidget(self.textBrowser, 0, 1, 1, 1)
+        self.pushButton = QtWidgets.QPushButton(PopUp_Case_Add)
+        self.pushButton.setGeometry(QtCore.QRect(450, 450, 113, 32))
+        self.pushButton.setObjectName("pushButton")
+
+        self.retranslateUi(PopUp_Case_Add)
+        QtCore.QMetaObject.connectSlotsByName(PopUp_Case_Add)
+
+    def retranslateUi(self, PopUp_Case_Add):
+        _translate = QtCore.QCoreApplication.translate
+        PopUp_Case_Add.setWindowTitle(_translate("PopUp_Case_Add", "Form"))
+        self.label_3.setText(_translate("PopUp_Case_Add", "Caliber"))
+        self.label.setText(_translate("PopUp_Case_Add", "Name"))
+        self.label_2.setText(_translate("PopUp_Case_Add", "Manufacturer"))
+        self.label_4.setText(_translate("PopUp_Case_Add", "Finish"))
+        self.label_5.setText(_translate("PopUp_Case_Add", "Primer Size"))
+        self.pushButton.setText(_translate("PopUp_Case_Add", "Add Case"))
+        print('here too')
+
+
 class ShowAllSilencers_PopUp(QWidget):
     """
     This "window" is a QWidget. If it has no parent, it
@@ -280,6 +341,7 @@ class ShowAllSilencers_PopUp(QWidget):
         self.label.setAlignment(Qt.AlignLeft)
         layout.addWidget(self.label)
         self.setLayout(layout)
+
 
 class PlotCanvas(FigureCanvas):
 
@@ -527,6 +589,13 @@ class Ui_MainWindow(object):
     def displayData_CTab(self):
         pass
 
+    def PopUp_Add_Case_BTN(self):
+        if self.CTab_Add_BTN_POP.isVisible():
+            self.CTab_Add_BTN_POP.hide()
+
+        else:
+            self.CTab_Add_BTN_POP.show()
+
     def PopUp_ShowAllCases(self, checked):
         if self.CTab_ShowCases_POP.isVisible():
             self.CTab_ShowCases_POP.hide()
@@ -580,7 +649,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setAutoFillBackground(False)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
         self.tabWidget.setObjectName("tabWidget")
-
+        # change font type and size
+        #self.tabWidget.setFont(QtGui.QFont('SansSerif', 15))
         # FTab --------------------------------
         self.FTab_tab = QtWidgets.QWidget()
         self.FTab_tab.setObjectName("FTab_tab")
@@ -1740,10 +1810,19 @@ class Ui_MainWindow(object):
             self.verticalLayoutWidget_5)
         self.CTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.CTab_verticalLayout.setObjectName("CTab_verticalLayout")
+        # CTab Add Data to DB BTN
         self.CTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
         self.CTab_Add_BTN.setDefault(True)
         self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
         self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
+
+
+
+        self.CTab_Add_BTN_POP = CTab_Add_Data_PopUp()
+        self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
+
+
+
         # CTab View All BTN
         self.CTab_View_All_BTN = QtWidgets.QPushButton(
             self.verticalLayoutWidget_5)
@@ -2862,7 +2941,7 @@ class Ui_MainWindow(object):
         self.FTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
         self.FTab_View_All_BTN.setText(
             _translate("MainWindow", "View All Firearms"))
-        self.FTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
+        self.FTab_BTN_3.setText(_translate("MainWindow", "Button 3 TEST"))
         self.FTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.FTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
         self.FTab_BTN_6.setText(_translate("MainWindow", "Button 6"))
@@ -2990,9 +3069,9 @@ class Ui_MainWindow(object):
         self.CTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 2"))
         self.CTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
         self.CTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
-        self.CTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
+        self.CTab_Add_BTN.setText(_translate("MainWindow", "Add Case Data"))
         self.CTab_View_All_BTN.setText(
-            _translate("MainWindow", "View All Firearms"))
+            _translate("MainWindow", "View All Cases"))
         self.CTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
         self.CTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
         self.CTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -3193,8 +3272,6 @@ class Ui_MainWindow(object):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
