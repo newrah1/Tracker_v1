@@ -230,64 +230,61 @@ class ShowAllCases_PopUp(QWidget):
 
 
 class CTab_Add_Case_PopUp(QWidget):
-    def setupUi(self, PopUp_Case_Add):
-        self.setWindowTitle("Add Case")
-        PopUp_Case_Add.setObjectName("PopUp_Case_Add")
-        PopUp_Case_Add.resize(611, 524)
-        self.gridLayoutWidget = QtWidgets.QWidget(PopUp_Case_Add)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 551, 432))
+    def setupUi(self, PopUp_Add_Case):
+        PopUp_Add_Case.setObjectName("PopUp_Add_Case")
+        PopUp_Add_Case.resize(553, 607)
+        self.centralwidget = QtWidgets.QWidget(PopUp_Add_Case)
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 531, 551))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
-        self.textBrowser_3 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-        self.textBrowser_3.setObjectName("textBrowser_3")
-        self.gridLayout.addWidget(self.textBrowser_3, 2, 1, 1, 1)
-        self.label_3 = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.label_3.setObjectName("label_3")
-        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
-        self.textBrowser_2 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-        self.textBrowser_2.setObjectName("textBrowser_2")
-        self.gridLayout.addWidget(self.textBrowser_2, 1, 1, 1, 1)
-        self.textBrowser_4 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-        self.textBrowser_4.setObjectName("textBrowser_4")
-        self.gridLayout.addWidget(self.textBrowser_4, 3, 1, 1, 1)
-        self.label = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
-        self.label_2 = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.label_2.setObjectName("label_2")
-        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
-        self.label_4 = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.label_4.setObjectName("label_4")
-        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
-        self.textBrowser_5 = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-        self.textBrowser_5.setObjectName("textBrowser_5")
-        self.gridLayout.addWidget(self.textBrowser_5, 4, 1, 1, 1)
-        self.label_5 = QtWidgets.QLabel(self.gridLayoutWidget)
-        self.label_5.setObjectName("label_5")
-        self.gridLayout.addWidget(self.label_5, 4, 0, 1, 1)
-        self.textBrowser = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-        self.textBrowser.setObjectName("textBrowser")
-        self.gridLayout.addWidget(self.textBrowser, 0, 1, 1, 1)
-        self.pushButton = QtWidgets.QPushButton(PopUp_Case_Add)
-        self.pushButton.setGeometry(QtCore.QRect(450, 450, 113, 32))
-        self.pushButton.setObjectName("pushButton")
+        self.Caliber_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.Caliber_LBL.setObjectName("Caliber_LBL")
+        self.gridLayout.addWidget(self.Caliber_LBL, 2, 0, 1, 1)
+        self.Name_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.Name_TB.setObjectName("Name_TB")
+        self.gridLayout.addWidget(self.Name_TB, 0, 1, 1, 1)
+        self.Manufacturer_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.Manufacturer_TB.setObjectName("Manufacturer_TB")
+        self.gridLayout.addWidget(self.Manufacturer_TB, 1, 1, 1, 1)
+        self.Manufacturer_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.Manufacturer_LBL.setObjectName("Manufacturer_LBL")
+        self.gridLayout.addWidget(self.Manufacturer_LBL, 1, 0, 1, 1)
+        self.Name_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.Name_LBL.setObjectName("Name_LBL")
+        self.gridLayout.addWidget(self.Name_LBL, 0, 0, 1, 1)
+        self.Caliber_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.Caliber_TB.setObjectName("Caliber_TB")
+        self.gridLayout.addWidget(self.Caliber_TB, 2, 1, 1, 1)
+        self.PrimerSize_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.PrimerSize_LBL.setObjectName("PrimerSize_LBL")
+        self.gridLayout.addWidget(self.PrimerSize_LBL, 3, 0, 1, 1)
+        self.PrimerSize_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
+        self.PrimerSize_TB.setObjectName("PrimerSize_TB")
+        self.gridLayout.addWidget(self.PrimerSize_TB, 3, 1, 1, 1)
+        self.AddCase_BTN = QtWidgets.QPushButton(self.centralwidget)
+        self.AddCase_BTN.setGeometry(QtCore.QRect(420, 570, 113, 32))
+        self.AddCase_BTN.setObjectName("AddCase_BTN")
+        # Not sure what this does...added by QtDesigner
+        #PopUp_Add_Case.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(PopUp_Case_Add)
-        QtCore.QMetaObject.connectSlotsByName(PopUp_Case_Add)
+        self.retranslateUi(PopUp_Add_Case)
+        QtCore.QMetaObject.connectSlotsByName(PopUp_Add_Case)
 
-
-    def retranslateUi(self, PopUp_Case_Add):
+    def retranslateUi(self, PopUp_Add_Case):
         _translate = QtCore.QCoreApplication.translate
-        PopUp_Case_Add.setWindowTitle(_translate("PopUp_Case_Add", "Form"))
-        self.label_3.setText(_translate("PopUp_Case_Add", "Caliber"))
-        self.label.setText(_translate("PopUp_Case_Add", "Name"))
-        self.label_2.setText(_translate("PopUp_Case_Add", "Manufacturer"))
-        self.label_4.setText(_translate("PopUp_Case_Add", "Finish"))
-        self.label_5.setText(_translate("PopUp_Case_Add", "Primer Size"))
-        self.pushButton.setText(_translate("PopUp_Case_Add", "Add Case"))
-
+        PopUp_Add_Case.setWindowTitle(
+            _translate("PopUp_Add_Case", "MainWindow"))
+        self.Caliber_LBL.setText(_translate("PopUp_Add_Case", "Caliber"))
+        self.Manufacturer_LBL.setText(
+            _translate("PopUp_Add_Case", "Manufacturer"))
+        self.Name_LBL.setText(_translate("PopUp_Add_Case", "Name"))
+        self.PrimerSize_LBL.setText(
+            _translate("PopUp_Add_Case", "Primer Size"))
+        self.AddCase_BTN.setText(_translate("PopUp_Add_Case", "Add Case"))
 
 
 class CTab_Add_Data_PopUp(QWidget):
@@ -301,6 +298,7 @@ class CTab_Add_Data_PopUp(QWidget):
         self.label.setAlignment(Qt.AlignLeft)
         layout.addWidget(self.label)
         self.setLayout(layout)
+
 
 class ShowAllSilencers_PopUp(QWidget):
     """
