@@ -229,9 +229,9 @@ class ShowAllCases_PopUp(QWidget):
         self.setLayout(layout)
 
 
-class CTab_Add_Data_PopUp(QWidget):
-
+class CTab_Add_Case_PopUp(QWidget):
     def setupUi(self, PopUp_Case_Add):
+        self.setWindowTitle("Add Case")
         PopUp_Case_Add.setObjectName("PopUp_Case_Add")
         PopUp_Case_Add.resize(611, 524)
         self.gridLayoutWidget = QtWidgets.QWidget(PopUp_Case_Add)
@@ -277,6 +277,7 @@ class CTab_Add_Data_PopUp(QWidget):
         self.retranslateUi(PopUp_Case_Add)
         QtCore.QMetaObject.connectSlotsByName(PopUp_Case_Add)
 
+
     def retranslateUi(self, PopUp_Case_Add):
         _translate = QtCore.QCoreApplication.translate
         PopUp_Case_Add.setWindowTitle(_translate("PopUp_Case_Add", "Form"))
@@ -286,8 +287,20 @@ class CTab_Add_Data_PopUp(QWidget):
         self.label_4.setText(_translate("PopUp_Case_Add", "Finish"))
         self.label_5.setText(_translate("PopUp_Case_Add", "Primer Size"))
         self.pushButton.setText(_translate("PopUp_Case_Add", "Add Case"))
-        print('here too')
 
+
+
+class CTab_Add_Data_PopUp(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("List of Firearms")
+        layout = QVBoxLayout()
+        self.label = QLabel(self)
+        self.label.setStyleSheet("border: 1px solid black;")
+        self.label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
 class ShowAllSilencers_PopUp(QWidget):
     """
@@ -590,11 +603,11 @@ class Ui_MainWindow(object):
         pass
 
     def PopUp_Add_Case_BTN(self):
-        if self.CTab_Add_BTN_POP.isVisible():
-            self.CTab_Add_BTN_POP.hide()
+        if self.PopUp_Case_Add.isVisible():
+            self.PopUp_Case_Add.hide()
 
         else:
-            self.CTab_Add_BTN_POP.show()
+            self.PopUp_Case_Add.show()
 
     def PopUp_ShowAllCases(self, checked):
         if self.CTab_ShowCases_POP.isVisible():
@@ -1815,14 +1828,10 @@ class Ui_MainWindow(object):
         self.CTab_Add_BTN.setDefault(True)
         self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
         self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
-
-
-
-        self.CTab_Add_BTN_POP = CTab_Add_Data_PopUp()
+        self.PopUp_Case_Add = QtWidgets.QWidget()
+        self.CTab_AddCase_POP = CTab_Add_Case_PopUp()
+        self.CTab_AddCase_POP.setupUi(self.PopUp_Case_Add)
         self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
-
-
-
         # CTab View All BTN
         self.CTab_View_All_BTN = QtWidgets.QPushButton(
             self.verticalLayoutWidget_5)
