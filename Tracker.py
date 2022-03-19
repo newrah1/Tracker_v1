@@ -1,24 +1,23 @@
-import mysql.connector
+import random
+import sys
 import traceback
-import pandas as pd
 from configparser import ConfigParser
+
+import mysql.connector
+import pandas as pd
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-from PyQt5.QtWidgets import QVBoxLayout, QSizePolicy, QWidget
-from PyQt5.QtGui import QIcon
-from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
-from pandas import option_context
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QVBoxLayout, QSizePolicy, QWidget
 from matplotlib.backends.backend_qt5agg import \
 	FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-import random
-import sys
+from pandas import option_context
 
-from PopUp_Add_Firearm import Ui_PopUp_Add_Firearm
 from PopUp_Add_Bullet import Ui_PopUp_Add_Bullet
 from PopUp_Add_Case import Ui_PopUp_Add_Case
+from PopUp_Add_Firearm import Ui_PopUp_Add_Firearm
 
 
 class ShowAllFirearms_PopUp(QWidget):
@@ -859,7 +858,6 @@ class Ui_MainWindow(object):
 		addFirearm.setupUi(self.PopUp_Firearm_Add)
 		self.FTab_Add_BTN.clicked.connect(self.PopUp_Add_Firearm_BTN)
 
-
 		# FTab Show All Button
 		self.FTab_View_All_BTN = QtWidgets.QPushButton(
 			self.verticalLayoutWidget_2)
@@ -1198,15 +1196,11 @@ class Ui_MainWindow(object):
 		self.BTab_Add_BTN.setObjectName("BTab_Add_BTN")
 		self.BTab_verticalLayout.addWidget(self.BTab_Add_BTN)
 
-
-
 		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
 		addBullet = Ui_PopUp_Add_Bullet()
 		addBullet.setupUi(self.PopUp_Bullet_Add)
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
-
-
 
 		# BTab View All BTN
 		self.BTab_View_All_BTN = QtWidgets.QPushButton(
@@ -1801,13 +1795,11 @@ class Ui_MainWindow(object):
 		self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
 		self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
 
-
 		self.PopUp_Case_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Case from .\PopUp_Add_Case.py
 		addCase = Ui_PopUp_Add_Case()
 		addCase.setupUi(self.PopUp_Case_Add)
 		self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
-
 
 		# CTab View All BTN
 		self.CTab_View_All_BTN = QtWidgets.QPushButton(
@@ -1823,7 +1815,6 @@ class Ui_MainWindow(object):
 		self.CTab_BTN_3.setDefault(True)
 		self.CTab_BTN_3.setObjectName("Import Test")
 		self.CTab_verticalLayout.addWidget(self.CTab_BTN_3)
-
 
 		self.CTab_BTN_4 = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_BTN_4.setDefault(True)
