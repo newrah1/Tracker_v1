@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import random
 import sys
 
+from PopUp_Add_Firearm import Ui_PopUp_Add_Firearm
 from PopUp_Add_Bullet import Ui_PopUp_Add_Bullet
 from PopUp_Add_Case import Ui_PopUp_Add_Case
 
@@ -362,6 +363,13 @@ class Ui_MainWindow(object):
 			traceback.print_exc()
 
 	# FTab --------------------------------
+	def PopUp_Add_Firearm_BTN(self):
+		if self.PopUp_Firearm_Add.isVisible():
+			self.PopUp_Firearm_Add.hide()
+
+		else:
+			self.PopUp_Firearm_Add.show()
+
 	def displayData_FTab(self):
 		try:
 			# get the value from the Firearm comboBox
@@ -844,6 +852,14 @@ class Ui_MainWindow(object):
 		self.FTab_Add_BTN.setDefault(True)
 		self.FTab_Add_BTN.setObjectName("FTab_Add_BTN")
 		self.FTab_verticalLayout.addWidget(self.FTab_Add_BTN)
+
+		self.PopUp_Firearm_Add = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
+		addFirearm = Ui_PopUp_Add_Firearm()
+		addFirearm.setupUi(self.PopUp_Firearm_Add)
+		self.FTab_Add_BTN.clicked.connect(self.PopUp_Add_Firearm_BTN)
+
+
 		# FTab Show All Button
 		self.FTab_View_All_BTN = QtWidgets.QPushButton(
 			self.verticalLayoutWidget_2)
@@ -1182,6 +1198,8 @@ class Ui_MainWindow(object):
 		self.BTab_Add_BTN.setObjectName("BTab_Add_BTN")
 		self.BTab_verticalLayout.addWidget(self.BTab_Add_BTN)
 
+
+
 		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
 		addBullet = Ui_PopUp_Add_Bullet()
@@ -1189,10 +1207,6 @@ class Ui_MainWindow(object):
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 
 
-		#self.PopUp_Bullet_Add = QtWidgets.QWidget()
-		#self.BTab_AddBullet_POP = BTab_Add_Bullet_PopUp()
-		#self.BTab_AddBullet_POP.setupUi(self.PopUp_Bullet_Add)
-		#self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 
 		# BTab View All BTN
 		self.BTab_View_All_BTN = QtWidgets.QPushButton(
