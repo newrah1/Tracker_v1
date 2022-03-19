@@ -16,6 +16,9 @@ import matplotlib.pyplot as plt
 import random
 import sys
 
+from PopUp_Add_Bullet import Ui_PopUp_Add_Bullet
+from PopUp_Add_Case import Ui_PopUp_Add_Case
+
 
 class ShowAllFirearms_PopUp(QWidget):
 	"""
@@ -229,309 +232,6 @@ class ShowAllCases_PopUp(QWidget):
 		self.label.setAlignment(Qt.AlignLeft)
 		layout.addWidget(self.label)
 		self.setLayout(layout)
-
-
-class CTab_Add_Case_PopUp(QWidget):
-	def setupUi(self, PopUp_Add_Case):
-		PopUp_Add_Case.setObjectName("PopUp_Add_Case")
-		PopUp_Add_Case.resize(553, 607)
-		self.centralwidget = QtWidgets.QWidget(PopUp_Add_Case)
-		self.centralwidget.setObjectName("centralwidget")
-		self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-		self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 531, 551))
-		self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-		self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-		self.gridLayout.setContentsMargins(0, 0, 0, 0)
-		self.gridLayout.setObjectName("gridLayout")
-		self.Caliber_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Caliber_LBL.setObjectName("Caliber_LBL")
-		self.gridLayout.addWidget(self.Caliber_LBL, 2, 0, 1, 1)
-		self.Name_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		self.Name_TB.setObjectName("Name_TB")
-		self.gridLayout.addWidget(self.Name_TB, 0, 1, 1, 1)
-		self.Manufacturer_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		self.Manufacturer_TB.setObjectName("Manufacturer_TB")
-		self.gridLayout.addWidget(self.Manufacturer_TB, 1, 1, 1, 1)
-		self.Manufacturer_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Manufacturer_LBL.setObjectName("Manufacturer_LBL")
-		self.gridLayout.addWidget(self.Manufacturer_LBL, 1, 0, 1, 1)
-		self.Name_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Name_LBL.setObjectName("Name_LBL")
-		self.gridLayout.addWidget(self.Name_LBL, 0, 0, 1, 1)
-		self.Caliber_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		self.Caliber_TB.setObjectName("Caliber_TB")
-		self.gridLayout.addWidget(self.Caliber_TB, 2, 1, 1, 1)
-		self.PrimerSize_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.PrimerSize_LBL.setObjectName("PrimerSize_LBL")
-		self.gridLayout.addWidget(self.PrimerSize_LBL, 3, 0, 1, 1)
-		self.PrimerSize_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		self.PrimerSize_TB.setObjectName("PrimerSize_TB")
-		self.gridLayout.addWidget(self.PrimerSize_TB, 3, 1, 1, 1)
-		self.AddCase_BTN = QtWidgets.QPushButton(self.centralwidget)
-		self.AddCase_BTN.setGeometry(QtCore.QRect(420, 570, 113, 32))
-		self.AddCase_BTN.setObjectName("AddCase_BTN")
-		# Not sure what this does...added by QtDesigner
-		# PopUp_Add_Case.setCentralWidget(self.centralwidget)
-
-		self.retranslateUi(PopUp_Add_Case)
-		QtCore.QMetaObject.connectSlotsByName(PopUp_Add_Case)
-
-	def retranslateUi(self, PopUp_Add_Case):
-		_translate = QtCore.QCoreApplication.translate
-		PopUp_Add_Case.setWindowTitle(
-			_translate("PopUp_Add_Case", "MainWindow"))
-		self.Caliber_LBL.setText(_translate("PopUp_Add_Case", "Caliber"))
-		self.Manufacturer_LBL.setText(
-			_translate("PopUp_Add_Case", "Manufacturer"))
-		self.Name_LBL.setText(_translate("PopUp_Add_Case", "Name"))
-		self.PrimerSize_LBL.setText(
-			_translate("PopUp_Add_Case", "Primer Size"))
-		self.AddCase_BTN.setText(_translate("PopUp_Add_Case", "Add Case"))
-
-
-class BTab_Add_Bullet_PopUp(QWidget):
-	def setupUi(self, PopUp_Add_Bullet):
-		PopUp_Add_Bullet.setObjectName("PopUp_Add_Bullet")
-		PopUp_Add_Bullet.resize(558, 827)
-		PopUp_Add_Bullet.setMaximumSize(QtCore.QSize(16777215, 16777215))
-		self.centralwidget = QtWidgets.QWidget(PopUp_Add_Bullet)
-		self.centralwidget.setMaximumSize(QtCore.QSize(16777215, 16777215))
-		self.centralwidget.setObjectName("centralwidget")
-		self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-		self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 10, 531, 761))
-		self.gridLayoutWidget.setObjectName("gridLayoutWidget")
-		self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-		self.gridLayout.setContentsMargins(0, 0, 0, 0)
-		self.gridLayout.setObjectName("gridLayout")
-		self.Size_Inch_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Size_Inch_LBL.setObjectName("Size_Inch_LBL")
-		self.gridLayout.addWidget(self.Size_Inch_LBL, 2, 0, 1, 1)
-		self.Caliber_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Caliber_LBL.setObjectName("Caliber_LBL")
-		self.gridLayout.addWidget(self.Caliber_LBL, 7, 0, 1, 1)
-		self.Bullet_Base_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Bullet_Base_LBL.setObjectName("Bullet_Base_LBL")
-		self.gridLayout.addWidget(self.Bullet_Base_LBL, 8, 0, 1, 1)
-		self.Type_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Type_TB.sizePolicy().hasHeightForWidth())
-		self.Type_TB.setSizePolicy(sizePolicy)
-		self.Type_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Type_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Type_TB.setObjectName("Type_TB")
-		self.gridLayout.addWidget(self.Type_TB, 5, 1, 1, 1)
-		self.SKU_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.SKU_LBL.setObjectName("SKU_LBL")
-		self.gridLayout.addWidget(self.SKU_LBL, 6, 0, 1, 1)
-		self.Size_mm_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Size_mm_LBL.setObjectName("Size_mm_LBL")
-		self.gridLayout.addWidget(self.Size_mm_LBL, 3, 0, 1, 1)
-		self.Manufacturer_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Manufacturer_TB.sizePolicy().hasHeightForWidth())
-		self.Manufacturer_TB.setSizePolicy(sizePolicy)
-		self.Manufacturer_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Manufacturer_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Manufacturer_TB.setObjectName("Manufacturer_TB")
-		self.gridLayout.addWidget(self.Manufacturer_TB, 1, 1, 1, 1)
-		self.Bullet_Base_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Bullet_Base_TB.sizePolicy().hasHeightForWidth())
-		self.Bullet_Base_TB.setSizePolicy(sizePolicy)
-		self.Bullet_Base_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Bullet_Base_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Bullet_Base_TB.setObjectName("Bullet_Base_TB")
-		self.gridLayout.addWidget(self.Bullet_Base_TB, 8, 1, 1, 1)
-		self.BC_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.BC_LBL.setObjectName("BC_LBL")
-		self.gridLayout.addWidget(self.BC_LBL, 9, 0, 1, 1)
-		self.Name_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Name_TB.sizePolicy().hasHeightForWidth())
-		self.Name_TB.setSizePolicy(sizePolicy)
-		self.Name_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Name_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Name_TB.setObjectName("Name_TB")
-		self.gridLayout.addWidget(self.Name_TB, 0, 1, 1, 1)
-		self.Notes_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Notes_LBL.setObjectName("Notes_LBL")
-		self.gridLayout.addWidget(self.Notes_LBL, 12, 0, 1, 1)
-		self.Weight_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Weight_LBL.setObjectName("Weight_LBL")
-		self.gridLayout.addWidget(self.Weight_LBL, 4, 0, 1, 1)
-		self.Type_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Type_LBL.setObjectName("Type_LBL")
-		self.gridLayout.addWidget(self.Type_LBL, 5, 0, 1, 1)
-		self.Lengh_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Lengh_LBL.setObjectName("Lengh_LBL")
-		self.gridLayout.addWidget(self.Lengh_LBL, 10, 0, 1, 1)
-		self.Weight_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Weight_TB.sizePolicy().hasHeightForWidth())
-		self.Weight_TB.setSizePolicy(sizePolicy)
-		self.Weight_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Weight_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Weight_TB.setObjectName("Weight_TB")
-		self.gridLayout.addWidget(self.Weight_TB, 4, 1, 1, 1)
-		self.Notes_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Notes_TB.sizePolicy().hasHeightForWidth())
-		self.Notes_TB.setSizePolicy(sizePolicy)
-		self.Notes_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Notes_TB.setMaximumSize(QtCore.QSize(16777215, 300))
-		self.Notes_TB.setObjectName("Notes_TB")
-		self.gridLayout.addWidget(self.Notes_TB, 12, 1, 1, 1)
-		self.Size_mm_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Size_mm_TB.sizePolicy().hasHeightForWidth())
-		self.Size_mm_TB.setSizePolicy(sizePolicy)
-		self.Size_mm_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Size_mm_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Size_mm_TB.setObjectName("Size_mm_TB")
-		self.gridLayout.addWidget(self.Size_mm_TB, 3, 1, 1, 1)
-		self.Manufacturer_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Manufacturer_LBL.setObjectName("Manufacturer_LBL")
-		self.gridLayout.addWidget(self.Manufacturer_LBL, 1, 0, 1, 1)
-		self.Name_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Name_LBL.setObjectName("Name_LBL")
-		self.gridLayout.addWidget(self.Name_LBL, 0, 0, 1, 1)
-		self.Size_Inch_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Size_Inch_TB.sizePolicy().hasHeightForWidth())
-		self.Size_Inch_TB.setSizePolicy(sizePolicy)
-		self.Size_Inch_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Size_Inch_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Size_Inch_TB.setObjectName("Size_Inch_TB")
-		self.gridLayout.addWidget(self.Size_Inch_TB, 2, 1, 1, 1)
-		self.Picture_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Picture_TB.sizePolicy().hasHeightForWidth())
-		self.Picture_TB.setSizePolicy(sizePolicy)
-		self.Picture_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Picture_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Picture_TB.setObjectName("Picture_TB")
-		self.gridLayout.addWidget(self.Picture_TB, 13, 1, 1, 1)
-		self.Picture_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
-		self.Picture_LBL.setObjectName("Picture_LBL")
-		self.gridLayout.addWidget(self.Picture_LBL, 13, 0, 1, 1)
-		self.SKU_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.SKU_TB.sizePolicy().hasHeightForWidth())
-		self.SKU_TB.setSizePolicy(sizePolicy)
-		self.SKU_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.SKU_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.SKU_TB.setObjectName("SKU_TB")
-		self.gridLayout.addWidget(self.SKU_TB, 6, 1, 1, 1)
-		self.BC_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.BC_TB.sizePolicy().hasHeightForWidth())
-		self.BC_TB.setSizePolicy(sizePolicy)
-		self.BC_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.BC_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.BC_TB.setObjectName("BC_TB")
-		self.gridLayout.addWidget(self.BC_TB, 9, 1, 1, 1)
-		self.Caliber_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Caliber_TB.sizePolicy().hasHeightForWidth())
-		self.Caliber_TB.setSizePolicy(sizePolicy)
-		self.Caliber_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Caliber_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Caliber_TB.setObjectName("Caliber_TB")
-		self.gridLayout.addWidget(self.Caliber_TB, 7, 1, 1, 1)
-		self.Length_TB = QtWidgets.QTextBrowser(self.gridLayoutWidget)
-		sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
-										   QtWidgets.QSizePolicy.Fixed)
-		sizePolicy.setHorizontalStretch(0)
-		sizePolicy.setVerticalStretch(0)
-		sizePolicy.setHeightForWidth(
-			self.Length_TB.sizePolicy().hasHeightForWidth())
-		self.Length_TB.setSizePolicy(sizePolicy)
-		self.Length_TB.setMinimumSize(QtCore.QSize(0, 0))
-		self.Length_TB.setMaximumSize(QtCore.QSize(16777215, 30))
-		self.Length_TB.setObjectName("Length_TB")
-		self.gridLayout.addWidget(self.Length_TB, 10, 1, 1, 1)
-		spacerItem = QtWidgets.QSpacerItem(20, 40,
-										   QtWidgets.QSizePolicy.Minimum,
-										   QtWidgets.QSizePolicy.Expanding)
-		self.gridLayout.addItem(spacerItem, 14, 1, 1, 1)
-		self.AddBullet_BTN = QtWidgets.QPushButton(self.centralwidget)
-		self.AddBullet_BTN.setGeometry(QtCore.QRect(420, 790, 113, 32))
-		self.AddBullet_BTN.setObjectName("AddBullet_BTN")
-		# PopUp_Add_Bullet.setCentralWidget(self.centralwidget)
-
-		self.retranslateUi(PopUp_Add_Bullet)
-		QtCore.QMetaObject.connectSlotsByName(PopUp_Add_Bullet)
-
-	def retranslateUi(self, PopUp_Add_Bullet):
-		_translate = QtCore.QCoreApplication.translate
-		PopUp_Add_Bullet.setWindowTitle(_translate("PopUp_Add_Bullet",
-												   "Add Bullet"))
-		self.Size_Inch_LBL.setText(_translate("PopUp_Add_Bullet", "Size_Inch"))
-		self.Caliber_LBL.setText(_translate("PopUp_Add_Bullet", "Caliber"))
-		self.Bullet_Base_LBL.setText(
-			_translate("PopUp_Add_Bullet", "Bullet Base"))
-		self.SKU_LBL.setText(_translate("PopUp_Add_Bullet", "SKU"))
-		self.Size_mm_LBL.setText(_translate("PopUp_Add_Bullet", "Size_mm"))
-		self.BC_LBL.setText(
-			_translate("PopUp_Add_Bullet", "Ballistic Coefficient"))
-		self.Notes_LBL.setText(_translate("PopUp_Add_Bullet", "Notes"))
-		self.Weight_LBL.setText(_translate("PopUp_Add_Bullet", "Weight"))
-		self.Type_LBL.setText(_translate("PopUp_Add_Bullet", "Type"))
-		self.Lengh_LBL.setText(_translate("PopUp_Add_Bullet", "Length_Inch"))
-		self.Manufacturer_LBL.setText(
-			_translate("PopUp_Add_Bullet", "Manufacturer"))
-		self.Name_LBL.setText(_translate("PopUp_Add_Bullet", "Name"))
-		self.Picture_LBL.setText(_translate("PopUp_Add_Bullet", "Picture"))
-		self.AddBullet_BTN.setText(
-			_translate("PopUp_Add_Bullet", "Add Bullet"))
 
 
 class ShowAllSilencers_PopUp(QWidget):
@@ -1481,10 +1181,18 @@ class Ui_MainWindow(object):
 		self.BTab_Add_BTN.setDefault(True)
 		self.BTab_Add_BTN.setObjectName("BTab_Add_BTN")
 		self.BTab_verticalLayout.addWidget(self.BTab_Add_BTN)
-		self.PopUp_Bullet_Add = QtWidgets.QWidget()
-		self.BTab_AddBullet_POP = BTab_Add_Bullet_PopUp()
-		self.BTab_AddBullet_POP.setupUi(self.PopUp_Bullet_Add)
+
+		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
+		addBullet = Ui_PopUp_Add_Bullet()
+		addBullet.setupUi(self.PopUp_Bullet_Add)
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
+
+
+		#self.PopUp_Bullet_Add = QtWidgets.QWidget()
+		#self.BTab_AddBullet_POP = BTab_Add_Bullet_PopUp()
+		#self.BTab_AddBullet_POP.setupUi(self.PopUp_Bullet_Add)
+		#self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 
 		# BTab View All BTN
 		self.BTab_View_All_BTN = QtWidgets.QPushButton(
@@ -1493,7 +1201,7 @@ class Ui_MainWindow(object):
 		self.BTab_View_All_BTN.setDefault(True)
 		self.BTab_View_All_BTN.setObjectName("BTab_View_All_BTN")
 		self.BTab_verticalLayout.addWidget(self.BTab_View_All_BTN)
-		self.BTab_ShowBullets_POP = ShowAllBullets_PopUp()
+		self.BTab_ShowBullets_POP = ShowAllCases_PopUp()
 		self.BTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllBullets)
 		# BTab BTN 3
 		self.BTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
@@ -2073,15 +1781,20 @@ class Ui_MainWindow(object):
 			self.verticalLayoutWidget_5)
 		self.CTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
 		self.CTab_verticalLayout.setObjectName("CTab_verticalLayout")
-		# CTab Add Data to DB BTN
+		# CTab Add Case to DB BTN
 		self.CTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_Add_BTN.setDefault(True)
 		self.CTab_Add_BTN.setObjectName("CTab_Add_BTN")
 		self.CTab_verticalLayout.addWidget(self.CTab_Add_BTN)
-		self.PopUp_Case_Add = QtWidgets.QWidget()
-		self.CTab_AddCase_POP = CTab_Add_Case_PopUp()
-		self.CTab_AddCase_POP.setupUi(self.PopUp_Case_Add)
+
+
+		self.PopUp_Case_Add = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Case from .\PopUp_Add_Case.py
+		addCase = Ui_PopUp_Add_Case()
+		addCase.setupUi(self.PopUp_Case_Add)
 		self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
+
+
 		# CTab View All BTN
 		self.CTab_View_All_BTN = QtWidgets.QPushButton(
 			self.verticalLayoutWidget_5)
@@ -2094,8 +1807,10 @@ class Ui_MainWindow(object):
 
 		self.CTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_BTN_3.setDefault(True)
-		self.CTab_BTN_3.setObjectName("CTab_BTN_3")
+		self.CTab_BTN_3.setObjectName("Import Test")
 		self.CTab_verticalLayout.addWidget(self.CTab_BTN_3)
+
+
 		self.CTab_BTN_4 = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_BTN_4.setDefault(True)
 		self.CTab_BTN_4.setObjectName("CTab_BTN_4")
