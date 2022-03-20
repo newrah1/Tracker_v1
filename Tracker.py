@@ -15,9 +15,7 @@ from matplotlib.backends.backend_qt5agg import \
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from PopUp_Add_Bullet import Ui_PopUp_Add_Bullet
-from PopUp_Add_Case import Ui_PopUp_Add_Case
-from PopUp_Add_Firearm import Ui_PopUp_Add_Firearm
+from Popup import Add_Bullet, Add_Case, Add_Firearm
 
 
 class ShowAllFirearms_PopUp(QWidget):
@@ -854,7 +852,7 @@ class Ui_MainWindow(object):
 
 		self.PopUp_Firearm_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
-		addFirearm = Ui_PopUp_Add_Firearm()
+		addFirearm = Add_Firearm.Ui_PopUp_Add_Firearm()
 		addFirearm.setupUi(self.PopUp_Firearm_Add)
 		self.FTab_Add_BTN.clicked.connect(self.PopUp_Add_Firearm_BTN)
 
@@ -1198,7 +1196,7 @@ class Ui_MainWindow(object):
 
 		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
-		addBullet = Ui_PopUp_Add_Bullet()
+		addBullet = Add_Bullet.Ui_PopUp_Add_Bullet()
 		addBullet.setupUi(self.PopUp_Bullet_Add)
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 
@@ -1797,7 +1795,7 @@ class Ui_MainWindow(object):
 
 		self.PopUp_Case_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Case from .\PopUp_Add_Case.py
-		addCase = Ui_PopUp_Add_Case()
+		addCase = Add_Case.Ui_PopUp_Add_Case()
 		addCase.setupUi(self.PopUp_Case_Add)
 		self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
 
