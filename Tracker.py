@@ -15,7 +15,7 @@ from matplotlib.backends.backend_qt5agg import \
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder
 
 
 class ShowAllFirearms_PopUp(QWidget):
@@ -541,6 +541,14 @@ class Ui_MainWindow(object):
 
 		else:
 			self.PTab_ShowPowders_POP.show()
+
+	def PopUp_Add_Powder_BTN(self):
+		if self.PopUp_Powder_Add.isVisible():
+			self.PopUp_Popwder_Add.hide()
+
+		else:
+			self.PopUp_Powder_Add.show()
+
 
 	# PTab --------------------------------
 
@@ -1345,7 +1353,7 @@ class Ui_MainWindow(object):
 		self.PTab_OLen_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_OLen_TB.setObjectName("PTab_OLen_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_OLen_TB, 6, 1, 1, 1)
-		# BTab Slot 8
+		# PTab Slot 8
 		self.PTab_BarrelLen_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_BarrelLen_LBL.setObjectName("PTab_BarrelLen_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_BarrelLen_LBL, 7, 0, 1, 1)
@@ -1354,7 +1362,7 @@ class Ui_MainWindow(object):
 		self.PTab_BarrelLen_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_BarrelLen_TB.setObjectName("PTab_BarrelLen_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_BarrelLen_TB, 7, 1, 1, 1)
-		# BTab Slot 9
+		# PTab Slot 9
 		self.PTab_Weight_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Weight_LBL.setObjectName("PTab_Weight_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Weight_LBL, 8, 0, 1, 1)
@@ -1362,7 +1370,7 @@ class Ui_MainWindow(object):
 		self.PTab_Weight_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Weight_TB.setObjectName("PTab_Weight_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Weight_TB, 8, 1, 1, 1)
-		# BTab Slot 10
+		# PTab Slot 10
 		self.PTab_Action_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Action_LBL.setObjectName("PTab_Action_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Action_LBL, 9, 0, 1, 1)
@@ -1370,7 +1378,7 @@ class Ui_MainWindow(object):
 		self.PTab_Action_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Action_TB.setObjectName("PTab_Action_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Action_TB, 9, 1, 1, 1)
-		# BTab Slot 11
+		# PTab Slot 11
 		self.PTab_TwistRate_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_TwistRate_LBL.setObjectName("PTab_TwistRate_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_TwistRate_LBL, 10, 0, 1, 1)
@@ -1379,7 +1387,7 @@ class Ui_MainWindow(object):
 		self.PTab_TwistRate_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_TwistRate_TB.setObjectName("PTab_TwistRate_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_TwistRate_TB, 10, 1, 1, 1)
-		# BTab Slot 12
+		# PTab Slot 12
 		self.PTab_ThreadSize_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_ThreadSize_LBL.setObjectName("PTab_ThreadSize_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_ThreadSize_LBL, 11, 0, 1, 1)
@@ -1388,7 +1396,7 @@ class Ui_MainWindow(object):
 		self.PTab_ThreadSize_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_ThreadSize_TB.setObjectName("PTab_ThreadSize_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_ThreadSize_TB, 11, 1, 1, 1)
-		# BTab Slot 13
+		# PTab Slot 13
 		self.PTab_Slot_1_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_1_LBL.setObjectName("PTab_Slot_1_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_1_LBL, 13, 0, 1, 1)
@@ -1396,7 +1404,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_1_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_1_TB.setObjectName("PTab_Slot_1_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_1_TB, 13, 1, 1, 1)
-		# BTab Slot 14
+		# PTab Slot 14
 		self.PTab_Slot_2_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
 		self.PTab_Slot_2_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_2_TB.setObjectName("PTab_Slot_2_TB")
@@ -1404,7 +1412,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_2_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_2_LBL.setObjectName("PTab_Slot_2_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_2_LBL, 14, 0, 1, 1)
-		# BTab Slot 15
+		# PTab Slot 15
 		self.PTab_Slot_3_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_3_LBL.setObjectName("PTab_Slot_3_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_3_LBL, 15, 0, 1, 1)
@@ -1412,7 +1420,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_3_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_3_TB.setObjectName("PTab_Slot_3_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_3_TB, 15, 1, 1, 1)
-		# BTab Slot 16
+		# PTab Slot 16
 		self.PTab_Slot_4_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
 		self.PTab_Slot_4_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_4_TB.setObjectName("PTab_Slot_4_TB")
@@ -1420,7 +1428,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_4_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_4_LBL.setObjectName("PTab_Slot_4_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_4_LBL, 16, 0, 1, 1)
-		# BTab Slot 17
+		# PTab Slot 17
 		self.PTab_Slot_5_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_5_LBL.setObjectName("PTab_Slot_5_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_5_LBL, 18, 0, 1, 1)
@@ -1428,7 +1436,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_5_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_5_TB.setObjectName("PTab_Slot_5_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_5_TB, 18, 1, 1, 1)
-		# BTab Slot 18
+		# PTab Slot 18
 		self.PTab_Slot_6_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_6_LBL.setObjectName("PTab_Slot_6_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_6_LBL, 19, 0, 1, 1)
@@ -1436,7 +1444,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_6_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_6_TB.setObjectName("PTab_Slot_6_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_6_TB, 19, 1, 1, 1)
-		# BTab Slot 19
+		# PTab Slot 19
 		self.PTab_Slot_7_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_7_LBL.setObjectName("PTab_Slot_7_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_7_LBL, 21, 0, 1, 1)
@@ -1444,7 +1452,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_7_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_7_TB.setObjectName("PTab_Slot_7_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_7_TB, 21, 1, 1, 1)
-		# BTab Slot 20
+		# PTab Slot 20
 		self.PTab_Slot_8_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_8_LBL.setObjectName("PTab_Slot_8_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_8_LBL, 23, 0, 1, 1)
@@ -1452,7 +1460,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_8_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_8_TB.setObjectName("PTab_Slot_8_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_8_TB, 23, 1, 1, 1)
-		# BTab Slot 21
+		# PTab Slot 21
 		self.PTab_Slot_9_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_9_LBL.setObjectName("PTab_Slot_9_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_9_LBL, 25, 0, 1, 1)
@@ -1460,7 +1468,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_9_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_9_TB.setObjectName("PTab_Slot_9_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_9_TB, 25, 1, 1, 1)
-		# BTab Slot 22
+		# pTab Slot 22
 		self.PTab_Slot_10_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
 		self.PTab_Slot_10_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_10_TB.setObjectName("PTab_Slot_10_TB")
@@ -1476,7 +1484,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_11_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_11_TB.setObjectName("PTab_Slot_11_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_11_TB, 28, 1, 1, 1)
-		# BTab Slot 24
+		# PTab Slot 24
 		self.PTab_Slot_12_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
 		self.PTab_Slot_12_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_Slot_12_TB.setObjectName("PTab_Slot_12_TB")
@@ -1484,7 +1492,7 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_Slot_12_LBL.setObjectName("PTab_Slot_12_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_Slot_12_LBL, 30, 0, 1, 1)
-		# BTab Notes
+		# PTab Notes
 		self.PTab_Notes_LBL = QtWidgets.QLabel(self.PTab_tab)
 		self.PTab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
 		self.PTab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
@@ -1492,7 +1500,7 @@ class Ui_MainWindow(object):
 		self.PTab_Notes_TB = QtWidgets.QTextBrowser(self.PTab_tab)
 		self.PTab_Notes_TB.setGeometry(QtCore.QRect(490, 450, 601, 501))
 		self.PTab_Notes_TB.setObjectName("PTab_Notes_TB")
-		# BTab Picture
+		# PTab Picture
 		self.PTab_Picture_LBL = QtWidgets.QLabel(self.PTab_tab)
 		self.PTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
 		self.PTab_Picture_LBL.setText("")
@@ -1500,16 +1508,23 @@ class Ui_MainWindow(object):
 			QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
 		self.PTab_Picture_LBL.setScaledContents(True)
 		self.PTab_Picture_LBL.setObjectName("PTab_Picture_LBL")
-		# BTab Show Data BTN
+		# PTab Show Data BTN
 		self.PTab_ShowData_BTN = QtWidgets.QPushButton(self.PTab_tab)
 		self.PTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.PTab_ShowData_BTN.setDefault(True)
 		self.PTab_ShowData_BTN.setObjectName("PTab_ShowData_BTN")
-		# BTab Add BTN
+		# PTab Add BTN
 		self.PTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_4)
 		self.PTab_Add_BTN.setDefault(True)
 		self.PTab_Add_BTN.setObjectName("PTab_Add_BTN")
 		self.PTab_verticalLayout.addWidget(self.PTab_Add_BTN)
+
+		self.PopUp_Powder_Add = QtWidgets.QMainWindow()
+		addPowder = Add_Powder.Ui_PopUp_Add_Powder()
+		addPowder.setupUi(self.PopUp_Powder_Add)
+		self.PTab_Add_BTN.clicked.connect(self.PopUp_Add_Powder_BTN)
+
+
 		# PTab View All BTN
 		self.PTab_View_All_BTN = QtWidgets.QPushButton(
 			self.verticalLayoutWidget_4)
