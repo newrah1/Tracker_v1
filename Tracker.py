@@ -15,9 +15,9 @@ from matplotlib.backends.backend_qt5agg import \
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder,Show_Firearms
 
-
+'''
 class ShowAllFirearms_PopUp(QWidget):
 	"""
     This "window" is a QWidget. If it has no parent, it
@@ -69,7 +69,7 @@ class ShowAllFirearms_PopUp(QWidget):
 		self.label.setAlignment(Qt.AlignLeft)
 		layout.addWidget(self.label)
 		self.setLayout(layout)
-
+'''
 
 class ShowAllBullets_PopUp(QWidget):
 	"""
@@ -867,12 +867,20 @@ class Ui_MainWindow(object):
 		# FTab Show All Button
 		self.FTab_View_All_BTN = QtWidgets.QPushButton(
 			self.verticalLayoutWidget_2)
-		self.FTab_View_All_BTN.setAutoDefault(False)
 		self.FTab_View_All_BTN.setDefault(True)
 		self.FTab_View_All_BTN.setObjectName("FTab_View_All_BTN")
-		self.FTab_ShowFirearms_POP = ShowAllFirearms_PopUp()
-		self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
 		self.FTab_verticalLayout.addWidget(self.FTab_View_All_BTN)
+		#self.FTab_ShowFirearms_POP = ShowAllFirearms_PopUp()
+		#self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
+
+		self.PopUp_Firearm_Show = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
+		viewFirearm = Show_Firearms.Ui_MainWindow()
+		viewFirearm.setupUi(self.PopUp_Firearm_Show)
+		self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
+
+
+
 		# FTab BTN 3
 		self.FTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
 		self.FTab_BTN_3.setDefault(True)
