@@ -15,48 +15,11 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
 from PyQt5.QtGui import *
+from Tracker import Ui_MainWindow
 
 class Ui_MainWindow(object):
     def __init__(self):
-        # set run parameters
-        self.parser = ConfigParser()
-        self.parser.read("Query_Config.ini")
-        print(self.parser['SQL']['host'])
-
-        self.firearm_df = self.config_query(
-            "SELECT * FROM Configuration_V1.Firearm",
-            "Number of Configurations = ",
-            "None")
-        self.firearm_df.columns = self.firearm_df.columns.str.lstrip()
-
-    def config_query(self, query, text, return_value):
-        self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
-                                            user=self.parser['SQL']['user'],
-                                            password=self.parser['SQL'][
-                                                'password'],
-                                            database=self.parser['SQL'][
-                                                'database'],
-                                            auth_plugin=self.parser['SQL'][
-                                                'auth_plugin']
-                                            )
-        # save to DataFrame
-        df = pd.read_sql(query, self.conn)
-
-        if return_value == 'None':
-            pass
-        elif return_value == 'True':
-            # print the query
-            print("Query = ", query)
-
-            # print the number of rows
-            rows = df.shape[0]
-            print('{}{}\n'.format(text, rows))
-
-            print(df.to_string(max_rows=5))
-        return df
-
-
-
+       pass
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -64,8 +27,8 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.ShowAllFirearms = QtWidgets.QTextBrowser(self.centralwidget)
-        self.ShowAllFirearms.setText(self.firearm_df['Name'].to_string(
-            index=False))
+        #self.ShowAllFirearms.setText(self.firearm_df['Name'].to_string(
+        #    index=False))
         self.ShowAllFirearms.setFont(QFont('Times', 20))
         self.ShowAllFirearms.setGeometry(QtCore.QRect(10, 10, 771, 781))
         self.ShowAllFirearms.setAccessibleName("")

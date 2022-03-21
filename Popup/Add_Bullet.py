@@ -11,7 +11,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+
 class Ui_PopUp_Add_Bullet(object):
+    def __init__(self, bullets_df):
+        super().__init__()
+        self.bullets_df = bullets_df
+
     def setupUi(self, PopUp_Add_Bullet):
         PopUp_Add_Bullet.setObjectName("PopUp_Add_Bullet")
         PopUp_Add_Bullet.resize(1359, 825)
