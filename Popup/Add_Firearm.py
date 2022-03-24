@@ -9,12 +9,67 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sqlite3
 
 
 class Ui_PopUp_Add_Firearm(object):
     def __init__(self, firearm_df):
         super().__init__()
         self.firearm_df = firearm_df
+
+    def WriteToDB(self):
+        type = self.Type_TE.toPlainText()
+        sku = self.SKU_TE.toPlainText()
+        name = self.Name_TE.toPlainText()
+        manufacturer = self.Manufacturer_TE.toPlainText()
+        model = self.Model_TE.toPlainText()
+        caliber = self.Caliber_TE.toPlainText()
+        olength = self.OverLength_TE.toPlainText()
+        blength = self.BarrelLength_TE.toPlainText()
+        weight = self.Weight_TE.toPlainText()
+        atype = self.Action_TE.toPlainText()
+        twist = self.Twist_TE.toPlainText()
+        note = self.Notes_TE.toPlainText()
+        picture = self.Picture_TE.toPlainText()
+        slot15 = self.Slot_15_TE.toPlainText()
+        slot16 = self.Slot_16_TE.toPlainText()
+        slot17 = self.Slot_17_TE.toPlainText()
+        slot18 = self.Slot_18_TE.toPlainText()
+        slot19 = self.Slot_19_TE.toPlainText()
+        slot20 = self.Slot_20_TE.toPlainText()
+        slot21 = self.Slot_21_TE.toPlainText()
+        slot22 = self.Slot_22_TE.toPlainText()
+        slot23 = self.Slot_23_TE.toPlainText()
+        slot24 = self.Slot_24_TE.toPlainText()
+        slot25 = self.Slot_25_TE.toPlainText()
+
+
+        sql = '{}{},{},{},{},{},{},{},{},{},{},{},{},{}{}'.format('INSERT '
+                            'INTO Firearm ',
+                            '(Firearm_Type, Name, Manufactuer, Model, SKU, '
+                            'Action_Type,Caliber, Overall_Length_Inch, '
+                            'Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, '
+                            'Pictre) values(',
+                            type, name, manufacturer, model, sku, atype,
+                            olength, weight, twist, blength, note, picture,
+                            ')')
+
+        conn = sqlite3.connect("./DATABASE/TrackerDB.db")
+        print("Opened database successfully")
+        cursor = conn.cursor()
+
+        # Insert a row inton the orders table
+        #insertStatement = "INSERT INTO Firearm values(type, sku, 100, 90, " \
+        #                  "'Sell', 'MSFT', 'Order Received')"
+        #sql = '{}'.format('INSERT INTO Firearm(Firearm_Type) values(55)')
+        sql = 'SELECT * from Firearm'
+        print(sql)
+        cursor.execute(sql)
+        conn.commit()
+
+
+
+
 
     def setupUi(self, PopUp_Add_Firearm):
         PopUp_Add_Firearm.setObjectName("PopUp_Add_Firearm")
@@ -33,6 +88,15 @@ class Ui_PopUp_Add_Firearm(object):
                                            QtWidgets.QSizePolicy.Minimum,
                                            QtWidgets.QSizePolicy.Expanding)
         self.gridLayout.addItem(spacerItem, 26, 1, 1, 1)
+        # AddFirearm Button
+        self.AddFirearm_BTN = QtWidgets.QPushButton(self.centralwidget)
+        self.AddFirearm_BTN.setGeometry(QtCore.QRect(1010, 780, 171, 32))
+        self.AddFirearm_BTN.setObjectName("AddFirearm_BTN")
+        PopUp_Add_Firearm.setCentralWidget(self.centralwidget)
+
+
+        self.AddFirearm_BTN.clicked.connect(lambda : self.WriteToDB())
+
         # Name
         self.Name_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
         self.Name_LBL.setObjectName("Name_LBL")
@@ -41,6 +105,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.Name_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Name_TE.setObjectName("Name_TE")
         self.gridLayout.addWidget(self.Name_TE, 2, 1, 1, 1)
+
         # BarrelLength
         self.BarrelLength_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
         self.BarrelLength_LBL.setObjectName("BarrelLength_LBL")
@@ -48,6 +113,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.BarrelLength_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.BarrelLength_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.BarrelLength_TE.setObjectName("BarrelLength_TE")
+        self.BarrelLength_TE.setPlaceholderText('Barrel Length in Inches')
         self.gridLayout.addWidget(self.BarrelLength_TE, 7, 1, 1, 1)
         # Weight
         self.Weight_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -64,6 +130,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.OverLength_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.OverLength_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.OverLength_TE.setObjectName("OverLength_TE")
+        self.OverLength_TE.setPlaceholderText('Overall Length in Inches')
         self.gridLayout.addWidget(self.OverLength_TE, 6, 1, 1, 1)
         # Manufacturer
         self.Manufacturer_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -80,6 +147,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.Action_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.Action_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Action_TE.setObjectName("Action_TE")
+        self.Action_TE.setPlaceholderText('Bolt, Semi, Pump, Wheel')
         self.gridLayout.addWidget(self.Action_TE, 9, 1, 1, 1)
         # Notes
         self.Notes_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -104,6 +172,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.Caliber_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.Caliber_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Caliber_TE.setObjectName("Caliber_TE")
+        self.Caliber_TE.setPlaceholderText('9mm, .308, 12 gauge, 5.7x28')
         self.gridLayout.addWidget(self.Caliber_TE, 5, 1, 1, 1)
         # Twist Rate
         self.Twist_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -128,6 +197,8 @@ class Ui_PopUp_Add_Firearm(object):
         self.Type_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.Type_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Type_TE.setObjectName("Type_TE")
+        self.Type_TE.setPlaceholderText('Rifle, Pistol, Shotgun, Revolver, '
+                                        'Upper')
         self.gridLayout.addWidget(self.Type_TE, 0, 1, 1, 1)
         # Picture
         self.Picture_LBL = QtWidgets.QLabel(self.gridLayoutWidget)
@@ -136,6 +207,7 @@ class Ui_PopUp_Add_Firearm(object):
         self.Picture_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
         self.Picture_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Picture_TE.setObjectName("Picture_TE")
+        self.Picture_TE.setPlaceholderText('c:\pictures\picture.jpg')
         self.gridLayout.addWidget(self.Picture_TE, 25, 1, 1, 1)
         # Thread
         self.Thread_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)
@@ -241,11 +313,13 @@ class Ui_PopUp_Add_Firearm(object):
         self.Slot_26_TE.setMaximumSize(QtCore.QSize(16777215, 30))
         self.Slot_26_TE.setObjectName("Slot_26_TE")
         self.gridLayout.addWidget(self.Slot_26_TE, 11, 3, 1, 1)
-        # AddFirearm Button
-        self.AddFirearm_BTN = QtWidgets.QPushButton(self.centralwidget)
-        self.AddFirearm_BTN.setGeometry(QtCore.QRect(1010, 780, 171, 32))
-        self.AddFirearm_BTN.setObjectName("AddFirearm_BTN")
-        PopUp_Add_Firearm.setCentralWidget(self.centralwidget)
+
+
+
+
+
+
+
 
         self.retranslateUi(PopUp_Add_Firearm)
         QtCore.QMetaObject.connectSlotsByName(PopUp_Add_Firearm)
@@ -280,7 +354,6 @@ class Ui_PopUp_Add_Firearm(object):
         self.Slot_26_LBL.setText(_translate("PopUp_Add_Firearm", "Slot 26"))
         self.Slot_24_LBL.setText(_translate("PopUp_Add_Firearm", "Slot 24"))
         self.AddFirearm_BTN.setText(_translate("PopUp_Add_Firearm", "Add Firearm"))
-
 
 if __name__ == "__main__":
     import sys
