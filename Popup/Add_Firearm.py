@@ -43,28 +43,21 @@ class Ui_PopUp_Add_Firearm(object):
         slot24 = self.Slot_24_TE.toPlainText()
         slot25 = self.Slot_25_TE.toPlainText()
 
-
-        sql = '{}{},{},{},{},{},{},{},{},{},{},{},{},{}{}'.format('INSERT '
-                            'INTO Firearm ',
-                            '(Firearm_Type, Name, Manufactuer, Model, SKU, '
-                            'Action_Type,Caliber, Overall_Length_Inch, '
-                            'Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, '
-                            'Pictre) values(',
-                            type, name, manufacturer, model, sku, atype,
-                            olength, weight, twist, blength, note, picture,
-                            ')')
+        sql = '{}'.format("""INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, 
+        Overall_Length_Inch, Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, 
+        Picture) 
+        VALUES
+        ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""
+        %(type, name, manufacturer, model, sku, atype, caliber, olength,
+          weight, twist, blength, note, picture)
+                          )
 
         conn = sqlite3.connect("./DATABASE/TrackerDB.db")
         print("Opened database successfully")
         cursor = conn.cursor()
-
-        # Insert a row inton the orders table
-        #insertStatement = "INSERT INTO Firearm values(type, sku, 100, 90, " \
-        #                  "'Sell', 'MSFT', 'Order Received')"
-        #sql = '{}'.format('INSERT INTO Firearm(Firearm_Type) values(55)')
-        sql = 'SELECT * from Firearm'
-        print(sql)
         cursor.execute(sql)
+
         conn.commit()
 
 

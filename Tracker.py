@@ -372,10 +372,9 @@ class Ui_MainWindow(object):
 			Selected_Firearm = self.FTab_Firearm_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df = self.config_query(
-				"SELECT * FROM Configuration_V1.Firearm",
-				"Number of Configurations = ",
-				"None")
+			firearm_df, bullets_df, powders_df, cases_df \
+				= self.query_databases()
+
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Firearm))
 			firearm_df = firearm_df.query(query)
