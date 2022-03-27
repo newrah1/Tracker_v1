@@ -9,7 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QCoreApplication
+
 import sqlite3
+import logging
+import traceback
 
 
 class Ui_PopUp_Add_Firearm(object):
@@ -18,51 +22,52 @@ class Ui_PopUp_Add_Firearm(object):
         self.firearm_df = firearm_df
 
     def WriteToDB(self):
-        type = self.Type_TE.toPlainText()
-        sku = self.SKU_TE.toPlainText()
-        name = self.Name_TE.toPlainText()
-        manufacturer = self.Manufacturer_TE.toPlainText()
-        model = self.Model_TE.toPlainText()
-        caliber = self.Caliber_TE.toPlainText()
-        olength = self.OverLength_TE.toPlainText()
-        blength = self.BarrelLength_TE.toPlainText()
-        weight = self.Weight_TE.toPlainText()
-        atype = self.Action_TE.toPlainText()
-        twist = self.Twist_TE.toPlainText()
-        note = self.Notes_TE.toPlainText()
-        picture = self.Picture_TE.toPlainText()
-        slot15 = self.Slot_15_TE.toPlainText()
-        slot16 = self.Slot_16_TE.toPlainText()
-        slot17 = self.Slot_17_TE.toPlainText()
-        slot18 = self.Slot_18_TE.toPlainText()
-        slot19 = self.Slot_19_TE.toPlainText()
-        slot20 = self.Slot_20_TE.toPlainText()
-        slot21 = self.Slot_21_TE.toPlainText()
-        slot22 = self.Slot_22_TE.toPlainText()
-        slot23 = self.Slot_23_TE.toPlainText()
-        slot24 = self.Slot_24_TE.toPlainText()
-        slot25 = self.Slot_25_TE.toPlainText()
+        try:
+            type = self.Type_TE.toPlainText()
+            sku = self.SKU_TE.toPlainText()
+            name = self.Name_TE.toPlainText()
+            manufacturer = self.Manufacturer_TE.toPlainText()
+            model = self.Model_TE.toPlainText()
+            caliber = self.Caliber_TE.toPlainText()
+            olength = self.OverLength_TE.toPlainText()
+            blength = self.BarrelLength_TE.toPlainText()
+            weight = self.Weight_TE.toPlainText()
+            atype = self.Action_TE.toPlainText()
+            twist = self.Twist_TE.toPlainText()
+            note = self.Notes_TE.toPlainText()
+            picture = self.Picture_TE.toPlainText()
+            slot15 = self.Slot_15_TE.toPlainText()
+            slot16 = self.Slot_16_TE.toPlainText()
+            slot17 = self.Slot_17_TE.toPlainText()
+            slot18 = self.Slot_18_TE.toPlainText()
+            slot19 = self.Slot_19_TE.toPlainText()
+            slot20 = self.Slot_20_TE.toPlainText()
+            slot21 = self.Slot_21_TE.toPlainText()
+            slot22 = self.Slot_22_TE.toPlainText()
+            slot23 = self.Slot_23_TE.toPlainText()
+            slot24 = self.Slot_24_TE.toPlainText()
+            slot25 = self.Slot_25_TE.toPlainText()
 
-        sql = '{}'.format("""INSERT INTO Firearm 
-        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, 
-        Overall_Length_Inch, Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, 
-        Picture) 
-        VALUES
-        ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""
-        %(type, name, manufacturer, model, sku, atype, caliber, olength,
-          weight, twist, blength, note, picture)
-                          )
+            sql = '{}'.format("""INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')"""
+            %(type, name, manufacturer, model, sku, atype, caliber, olength, weight, twist, blength,
+              note, picture)
+                              )
 
-        conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-        print("Opened database successfully")
-        cursor = conn.cursor()
-        cursor.execute(sql)
+            conn = sqlite3.connect("./DATABASE/TrackerDB.db")
+            print("Opened database successfully")
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+            logging.info(sql)
 
-        conn.commit()
-
-
-
-
+        except Exception as e:
+            print("Exception = ", str(e))
+            traceback.print_exc()
+            logging.error("ERROR --- ",  str(e))
 
     def setupUi(self, PopUp_Add_Firearm):
         PopUp_Add_Firearm.setObjectName("PopUp_Add_Firearm")
@@ -86,8 +91,6 @@ class Ui_PopUp_Add_Firearm(object):
         self.AddFirearm_BTN.setGeometry(QtCore.QRect(1010, 780, 171, 32))
         self.AddFirearm_BTN.setObjectName("AddFirearm_BTN")
         PopUp_Add_Firearm.setCentralWidget(self.centralwidget)
-
-
         self.AddFirearm_BTN.clicked.connect(lambda : self.WriteToDB())
 
         # Name

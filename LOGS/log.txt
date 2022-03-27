@@ -1,0 +1,53 @@
+26-Mar-22 16:13:44 - INSERT INTO Firearm
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('test','','','','','','','','','','','','')
+26-Mar-22 16:14:32 - INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('test2','','','','','','','','','','','','')
+26-Mar-22 16:17:51 - INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('test3','','','','','','','','','','','','')
+26-Mar-22 16:19:14 - NumExpr defaulting to 6 threads.
+26-Mar-22 16:19:20 - INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('test4','','','','','','','','','','','','')
+26-Mar-22 16:43:47 - INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('test6','','','','','','','','','','','','')
+26-Mar-22 16:44:32 - INSERT INTO Firearm 
+        (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+        Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+        VALUES
+        ('7','','','','','','','','','','','','')
+26-Mar-22 16:48:16 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('8','','','','','','','','','','','','')
+26-Mar-22 16:48:16 - 'Ui_PopUp_Add_Firearm' object has no attribute 'PopUp_Add_Firearm'
+26-Mar-22 16:51:32 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('','sdsfgdsdfg','','','','','','','','','','','')
+26-Mar-22 17:00:07 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('','','','','','','','','','','','','')
+26-Mar-22 17:00:18 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('','adfasdfasdfadsfadf','','','','','','','','','','','')
+26-Mar-22 20:50:42 - NumExpr defaulting to 6 threads.

@@ -1,10 +1,12 @@
 import random
+import sqlite3
 import sys
 import traceback
 from configparser import ConfigParser
-
+import logging
 import mysql.connector
 import pandas as pd
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
@@ -15,7 +17,7 @@ from matplotlib.backends.backend_qt5agg import \
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Show_Firearms
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder
 
 
 class ShowAllFirearms_PopUp(QWidget):
@@ -314,16 +316,15 @@ class Ui_MainWindow(object):
 		# set run parameters
 		self.parser = ConfigParser()
 		self.parser.read("./Tracker.ini")
+		# Set logging parameters
+		logging.basicConfig(filename="./LOGS/log.txt",
+							format='%(asctime)s - %(message)s',
+							datefmt='%d-%b-%y %H:%M:%S',
+							level=logging.INFO
+							)
 
-		self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
-											user=self.parser['SQL']['user'],
-											password=self.parser['SQL'][
-												'password'],
-											database=self.parser['SQL'][
-												'database'],
-											auth_plugin=self.parser['SQL'][
-												'auth_plugin']
-											)
+		self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
+
 	# Not currently used - config_query
 	def config_query(self, query, text, return_value):
 		# save to DataFrame
@@ -345,18 +346,15 @@ class Ui_MainWindow(object):
 	def query_databases(self):
 		"Read SQL DB's and return dataframes of the data "
 		try:
-			firearm_db = pd.read_sql("SELECT * FROM Configuration_V1.Firearm",
-									 self.conn)
-			bullets_db = pd.read_sql("SELECT * FROM Configuration_V1.bullet",
-									 self.conn)
-			powders_db = pd.read_sql("SELECT * FROM Configuration_V1.powder",
-									 self.conn)
-			cases_db = pd.read_sql("SELECT * FROM Configuration_V1.case",
-								   self.conn)
+			firearm_db = pd.read_sql("SELECT * FROM Firearm", self.conn)
+			bullets_db = pd.read_sql("SELECT * FROM bullet", self.conn)
+			powders_db = pd.read_sql("SELECT * FROM powder", self.conn)
+			cases_db = pd.read_sql("SELECT * FROM Case_table", self.conn)
 			return firearm_db, bullets_db, powders_db, cases_db
 		except Exception as e:
 			print("Exception = ", str(e))
 			traceback.print_exc()
+			logging.error("ERROR --- ", str(e))
 
 	# FTab --------------------------------
 	def PopUp_Add_Firearm_BTN(self):
@@ -393,23 +391,15 @@ class Ui_MainWindow(object):
 			self.FTab_Picture_LBL.clear()
 
 			# fill in the form
-			self.FTab_Name_TB.setText(
-				firearm_df['Name'].to_string(index=False))
-			self.FTab_Type_TB.setText(
-				firearm_df['Firearm_Type'].to_string(index=False))
-			self.FTab_Manufacturer_TB.setText(
-				firearm_df['Manufacturer'].to_string(index=False))
+			self.FTab_Name_TB.setText(firearm_df['Name'].to_string(index=False))
+			self.FTab_Type_TB.setText(firearm_df['Firearm_Type'].to_string(index=False))
+			self.FTab_Manufacturer_TB.setText(firearm_df['Manufacturer'].to_string(index=False))
 			self.FTab_SKU_TB.setText(firearm_df['SKU'].to_string(index=False))
-			self.FTab_Model_TB.setText(
-				firearm_df['Model'].to_string(index=False))
-			self.FTab_Caliber_TB.setText(
-				firearm_df['Caliber'].to_string(index=False))
-			self.FTab_OLen_TB.setText(
-				firearm_df['Overall_Length_Inch'].to_string(index=False))
-			self.FTab_BarrelLen_TB.setText(
-				firearm_df['Barrel_Len_Inch'].to_string(index=False))
-			self.FTab_Weight_TB.setText(
-				firearm_df['Weight_lb'].to_string(index=False))
+			self.FTab_Model_TB.setText(firearm_df['Model'].to_string(index=False))
+			self.FTab_Caliber_TB.setText(firearm_df['Caliber'].to_string(index=False))
+			self.FTab_OLen_TB.setText(firearm_df['Overall_Length_Inch'].to_string(index=False))
+			self.FTab_BarrelLen_TB.setText(firearm_df['Barrel_Len_Inch'].to_string(index=False))
+			self.FTab_Weight_TB.setText(firearm_df['Weight_Lb'].to_string(index=False))
 
 			# Context manager to temporarily set options in the with statement context.
 			# required to display 'Notes'
@@ -418,8 +408,8 @@ class Ui_MainWindow(object):
 					index=False))
 			# Display picture of firearm in GUI
 			high_rez = QtCore.QSize(400, 400)
-			pixmap = QtGui.QPixmap(
-				firearm_df['Picture'].to_string(index=False))
+			picture = '{}{}'.format("./picts/", firearm_df['Picture'].to_string(index=False))
+			pixmap = QtGui.QPixmap(picture)
 			pixmap = pixmap.scaled(high_rez)
 			self.FTab_Picture_LBL.setPixmap(pixmap)
 
@@ -546,7 +536,6 @@ class Ui_MainWindow(object):
 
 		else:
 			self.PopUp_Powder_Add.show()
-
 
 	# PTab --------------------------------
 
@@ -871,13 +860,11 @@ class Ui_MainWindow(object):
 		self.FTab_ShowFirearms_POP = ShowAllFirearms_PopUp()
 		self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
 
-		#self.PopUp_Firearm_Show = QtWidgets.QMainWindow()
+		# self.PopUp_Firearm_Show = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
-		#viewFirearm = Show_Firearms.Ui_MainWindow()
-		#viewFirearm.setupUi(self.PopUp_Firearm_Show)
-		#self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
-
-
+		# viewFirearm = Show_Firearms.Ui_MainWindow()
+		# viewFirearm.setupUi(self.PopUp_Firearm_Show)
+		# self.FTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllFirearms)
 
 		# FTab BTN 3
 		self.FTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
@@ -1210,7 +1197,7 @@ class Ui_MainWindow(object):
 
 		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
-		addBullet = Add_Bullet.Ui_PopUp_Add_Bullet(bullets_df)
+		addBullet = Add_Bullet.Ui_PopUp_Add_Bullet()
 		addBullet.setupUi(self.PopUp_Bullet_Add)
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 
@@ -1529,7 +1516,6 @@ class Ui_MainWindow(object):
 		addPowder = Add_Powder.Ui_PopUp_Add_Powder()
 		addPowder.setupUi(self.PopUp_Powder_Add)
 		self.PTab_Add_BTN.clicked.connect(self.PopUp_Add_Powder_BTN)
-
 
 		# PTab View All BTN
 		self.PTab_View_All_BTN = QtWidgets.QPushButton(
@@ -2908,38 +2894,39 @@ class Ui_MainWindow(object):
 	def retranslateUi(self, MainWindow):
 		_translate = QtCore.QCoreApplication.translate
 		MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-		self.FTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-		self.FTab_ThreadSize_LBL.setText(
-			_translate("MainWindow", "Thread Size"))
-		self.FTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
-		self.FTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
-		self.FTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
-		self.FTab_Slot_3_LBL.setText(_translate("MainWindow", "Slot 3"))
-		self.FTab_Slot_11_LBL.setText(_translate("MainWindow", "Slot 11"))
-		self.FTab_Slot_9_LBL.setText(_translate("MainWindow", "Slot 9"))
-		self.FTab_Caliber_LBL.setText(_translate("MainWindow", "Caliber"))
-		self.FTab_OLen_LBL.setText(_translate("MainWindow", "Overall Length"))
+
+		# pulldown label
+		self.FTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
+		# Label names
+		self.FTab_Name_LBL.setText(_translate("MainWindow", "Name"))
+		self.FTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+		self.FTab_Model_LBL.setText(_translate("MainWindow", "Model"))
 		self.FTab_SKU_LBL.setText(_translate("MainWindow", "SKU"))
 		self.FTab_Type_LBL.setText(_translate("MainWindow", "Type"))
+		self.FTab_Caliber_LBL.setText(_translate("MainWindow", "Caliber"))
+		self.FTab_OLen_LBL.setText(_translate("MainWindow", "Overall Length"))
+		self.FTab_BarrelLen_LBL.setText(_translate("MainWindow", "Barrel Length"))
 		self.FTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
 		self.FTab_Action_LBL.setText(_translate("MainWindow", "Action Type"))
-		self.FTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-		self.FTab_Manufacturer_LBL.setText(
-			_translate("MainWindow", "Manufacturer"))
-		self.FTab_Model_LBL.setText(_translate("MainWindow", "Model"))
-		self.FTab_BarrelLen_LBL.setText(
-			_translate("MainWindow", "Barrel Length"))
-		self.FTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
-		self.FTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
-		self.FTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
-		self.FTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 2"))
-		self.FTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
-		self.FTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
-		self.FTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))
+		self.FTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
+		self.FTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
+		self.FTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 15"))
+		self.FTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 16"))
+		self.FTab_Slot_3_LBL.setText(_translate("MainWindow", "Slot 17"))
+		self.FTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 18"))
+		self.FTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 19"))
+		self.FTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 20"))
+		self.FTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 21"))
+		self.FTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 22"))
+		self.FTab_Slot_9_LBL.setText(_translate("MainWindow", "Slot 23"))
+		self.FTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 24"))
+		self.FTab_Slot_11_LBL.setText(_translate("MainWindow", "Slot 25"))
+		self.FTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 26"))
+
+		# Button Names
 		self.FTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-		self.FTab_View_All_BTN.setText(
-			_translate("MainWindow", "View All Firearms"))
-		self.FTab_BTN_3.setText(_translate("MainWindow", "Button 3 TEST"))
+		self.FTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+		self.FTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
 		self.FTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
 		self.FTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
 		self.FTab_BTN_6.setText(_translate("MainWindow", "Button 6"))
@@ -2952,38 +2939,39 @@ class Ui_MainWindow(object):
 		self.tabWidget.setTabText(self.tabWidget.indexOf(self.FTab_tab),
 								  _translate("MainWindow", "Firearms"))
 		# BTab-------------------------
-		self.BTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
+		# pull down lable
 		self.BTab_Bullet_LBL.setText(_translate("MainWindow", "Bullet"))
-		self.BTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
-		self.BTab_Length_LBL.setText(_translate("MainWindow", "Length"))
-		self.BTab_Slot_13_LBL.setText(
-			_translate("MainWindow", "Slot_13"))
-		self.BTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
-		self.BTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
-		self.BTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
-		self.BTab_Slot_3_LBL.setText(_translate("MainWindow", "Slot 3"))
-		self.BTab_Slot_11_LBL.setText(_translate("MainWindow", "Slot 11"))
-		self.BTab_Slot_9_LBL.setText(_translate("MainWindow", "Slot 9"))
-		self.BTab_Type_LBL.setText(_translate("MainWindow", "Type"))
-		self.BTab_SKU_LBL.setText(_translate("MainWindow", "SKU"))
-		self.BTab_Manufacturer_LBL.setText(
-			_translate("MainWindow", "Manufacturer"))
+
 		self.BTab_Name_LBL.setText(_translate("MainWindow", "Name"))
-		self.BTab_BBase_LBL.setText(_translate("MainWindow", "Bullet Base"))
-		self.BTab_BC_LBL.setText(_translate("MainWindow", "BC"))
+		self.BTab_Manufacturer_LBL.setText(_translate("MainWindow", "Manufacturer"))
+		self.BTab_SKU_LBL.setText(_translate("MainWindow", "SKU"))
 		self.BTab_Size_Inch_LBL.setText(_translate("MainWindow", "Size_Inch"))
 		self.BTab_Size_mm_LBL.setText(_translate("MainWindow", "Size_mm"))
 		self.BTab_Weight_LBL.setText(_translate("MainWindow", "Weight"))
+		self.BTab_Type_LBL.setText(_translate("MainWindow", "Type"))
 		self.BTab_Caliber_LBL.setText(_translate("MainWindow", "Caliber"))
-		self.BTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 12"))
-		self.BTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 10"))
-		self.BTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 4"))
-		self.BTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 2"))
-		self.BTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 6"))
-		self.BTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 5"))
+		self.BTab_BBase_LBL.setText(_translate("MainWindow", "Bullet Base"))
+		self.BTab_BC_LBL.setText(_translate("MainWindow", "BC"))
+		self.BTab_Length_LBL.setText(_translate("MainWindow", "Length"))
+		self.BTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
+		self.BTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 15"))
+		self.BTab_Slot_2_LBL.setText(_translate("MainWindow", "Slot 16"))
+		self.BTab_Slot_3_LBL.setText(_translate("MainWindow", "Slot 17"))
+		self.BTab_Slot_4_LBL.setText(_translate("MainWindow", "Slot 18"))
+		self.BTab_Slot_5_LBL.setText(_translate("MainWindow", "Slot 19"))
+		self.BTab_Slot_6_LBL.setText(_translate("MainWindow", "Slot 20"))
+		self.BTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 21"))
+		self.BTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 22"))
+		self.BTab_Slot_9_LBL.setText(_translate("MainWindow", "Slot 23"))
+		self.BTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 24"))
+		self.BTab_Slot_11_LBL.setText(_translate("MainWindow", "Slot 25"))
+		self.BTab_Slot_12_LBL.setText(_translate("MainWindow", "Slot 26"))
+		self.BTab_Slot_13_LBL.setText(_translate("MainWindow", "Slot_13"))
+
+		# buttons
+		self.BTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
 		self.BTab_Add_BTN.setText(_translate("MainWindow", "Add Bullet"))
-		self.BTab_View_All_BTN.setText(
-			_translate("MainWindow", "View All Bullets"))
+		self.BTab_View_All_BTN.setText(_translate("MainWindow", "View All Bullets"))
 		self.BTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
 		self.BTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
 		self.BTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2994,12 +2982,13 @@ class Ui_MainWindow(object):
 		self.BTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
 		self.tabWidget.setTabText(self.tabWidget.indexOf(self.BTab_tab),
 								  _translate("MainWindow", "Bullets"))
+
+
 		self.PTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
 		self.PTab_Powder_LBL.setText(_translate("MainWindow", "Powder"))
 		self.PTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
 		self.PTab_TwistRate_LBL.setText(_translate("MainWindow", "Twist Rate"))
-		self.PTab_ThreadSize_LBL.setText(
-			_translate("MainWindow", "Thread Size"))
+		self.PTab_ThreadSize_LBL.setText(_translate("MainWindow", "Thread Size"))
 		self.PTab_Slot_8_LBL.setText(_translate("MainWindow", "Slot 8"))
 		self.PTab_Slot_7_LBL.setText(_translate("MainWindow", "Slot 7"))
 		self.PTab_Slot_1_LBL.setText(_translate("MainWindow", "Slot 1"))
