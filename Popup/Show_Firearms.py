@@ -17,7 +17,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import *
 from Tracker import Ui_MainWindow
 
-class Ui_MainWindow(object):
+class Ui_ShowFirearms(object):
     def __init__(self):
         conn = sqlite3.connect("./DATABASE/TrackerDB.db")
         print("Opened database successfully")
@@ -25,8 +25,8 @@ class Ui_MainWindow(object):
         sql = "SELECT * from firearm"
         cursor = conn.cursor()
         cursor.execute(sql)
-        #self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-        #self.firearm_db = pd.read_sql("SELECT * FROM Firearm", self.conn)
+        self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
+        self.firearm_df = pd.read_sql("SELECT * FROM Firearm", self.conn)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
