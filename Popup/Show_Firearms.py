@@ -15,7 +15,7 @@ import pandas as pd
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
 from PyQt5.QtGui import *
-from Tracker import Ui_MainWindow
+#from Tracker import Ui_MainWindow
 
 class Ui_ShowFirearms(object):
     def __init__(self):
@@ -34,8 +34,9 @@ class Ui_ShowFirearms(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.ShowAllFirearms = QtWidgets.QTextBrowser(self.centralwidget)
+        # query db and display in window
         self.ShowAllFirearms.setText(self.firearm_df['Name'].to_string(index=False))
-        self.ShowAllFirearms.setFont(QFont('Times', 20))
+        self.ShowAllFirearms.setFont(QFont('Times', 15))
         self.ShowAllFirearms.setGeometry(QtCore.QRect(10, 10, 771, 781))
         self.ShowAllFirearms.setAccessibleName("")
         self.ShowAllFirearms.setObjectName("ShowAllFirearms")
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_ShowFirearms()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
