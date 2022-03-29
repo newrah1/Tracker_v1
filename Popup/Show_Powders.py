@@ -13,16 +13,16 @@ import pandas as pd
 from PyQt5 import QtCore
 from PyQt5.QtGui import *
 
-class Ui_ShowFirearms(object):
+class Ui_ShowPowders(object):
     def __init__(self):
         conn = sqlite3.connect("./DATABASE/TrackerDB.db")
         print("Opened database successfully")
 
-        sql = "SELECT * from firearm"
+        sql = "SELECT * from Powder"
         cursor = conn.cursor()
         cursor.execute(sql)
         self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-        self.firearm_df = pd.read_sql("SELECT * FROM Firearm", self.conn)
+        self.powder_df = pd.read_sql("SELECT * FROM Powder", self.conn)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -31,11 +31,11 @@ class Ui_ShowFirearms(object):
         self.centralwidget.setObjectName("centralwidget")
         self.ShowAllFirearms = QtWidgets.QTextBrowser(self.centralwidget)
         # query db and display in window
-        self.ShowAllFirearms.setText(self.firearm_df['Name'].to_string(index=False))
+        self.ShowAllFirearms.setText(self.powder_df['Name'].to_string(index=False))
         self.ShowAllFirearms.setFont(QFont('Times', 15))
         self.ShowAllFirearms.setGeometry(QtCore.QRect(10, 10, 771, 781))
         self.ShowAllFirearms.setAccessibleName("")
-        self.ShowAllFirearms.setObjectName("ShowAllFirearms")
+        self.ShowAllFirearms.setObjectName("ShowAllPowders")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_ShowFirearms()
+    ui = Ui_ShowPowders()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

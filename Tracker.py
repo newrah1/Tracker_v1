@@ -12,12 +12,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QVBoxLayout, QSizePolicy, QWidget
-from matplotlib.backends.backend_qt5agg import \
-	FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Show_Firearms
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Show_Firearms, Show_Powders
 
 
 class ShowAllBullets_PopUp(QWidget):
@@ -507,11 +506,11 @@ class Ui_MainWindow(object):
 			traceback.print_exc()
 
 	def PopUp_ShowAllPowders(self, checked):
-		if self.PTab_ShowPowders_POP.isVisible():
-			self.PTab_ShowPowders_POP.hide()
+		if self.PopUp_Powder_Show.isVisible():
+			self.PopUp_Powder_Show.hide()
 
 		else:
-			self.PTab_ShowPowders_POP.show()
+			self.PopUp_Powder_Show.show()
 
 	def PopUp_Add_Powder_BTN(self):
 		if self.PopUp_Powder_Add.isVisible():
@@ -1320,8 +1319,7 @@ class Ui_MainWindow(object):
 		self.PTab_BulkDensity_LBL = QtWidgets.QLabel(self.formLayoutWidget_4)
 		self.PTab_BulkDensity_LBL.setObjectName("PTab_BulkDensity_LBL")
 		self.PTab_gridLayout.addWidget(self.PTab_BulkDensity_LBL, 7, 0, 1, 1)
-		self.PTab_BulkDensity_TB = QtWidgets.QTextBrowser(
-			self.formLayoutWidget_4)
+		self.PTab_BulkDensity_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_4)
 		self.PTab_BulkDensity_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PTab_BulkDensity_TB.setObjectName("PTab_BulkDensity_TB")
 		self.PTab_gridLayout.addWidget(self.PTab_BulkDensity_TB, 7, 1, 1, 1)
@@ -1493,8 +1491,14 @@ class Ui_MainWindow(object):
 		self.PTab_View_All_BTN.setDefault(True)
 		self.PTab_View_All_BTN.setObjectName("PTab_View_All_BTN")
 		self.PTab_verticalLayout.addWidget(self.PTab_View_All_BTN)
-		self.PTab_ShowPowders_POP = ShowAllPowders_PopUp()
+		#self.PTab_ShowPowders_POP = ShowAllPowders_PopUp()
+		#self.PTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllPowders)
+
+		self.PopUp_Powder_Show = QtWidgets.QMainWindow()
+		ShowAllPowders = Show_Powders.Ui_ShowPowders()
+		ShowAllPowders.setupUi(self.PopUp_Powder_Show)
 		self.PTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllPowders)
+
 		# PTab BTN 3
 		self.PTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_4)
 		self.PTab_BTN_3.setDefault(True)
@@ -1954,10 +1958,10 @@ class Ui_MainWindow(object):
 		self.PRTab_Slot_12_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
 		self.PRTab_Slot_12_LBL.setObjectName("PRTab_Slot_12_LBL")
 		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_12_LBL, 30, 0, 1, 1)
-		self.PTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
-		self.PTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
-		self.PTab_Manufacturer_TB.setObjectName("PRTab_Manufacturer_TB")
-		self.PRTab_gridLayout.addWidget(self.PTab_Manufacturer_TB, 3, 1, 1, 1)
+		self.PRTab_Manufacturer_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+		self.PRTab_Manufacturer_TB.setMaximumSize(QtCore.QSize(362, 26))
+		self.PRTab_Manufacturer_TB.setObjectName("PRTab_Manufacturer_TB")
+		self.PRTab_gridLayout.addWidget(self.PRTab_Manufacturer_TB, 3, 1, 1, 1)
 		self.PRTab_Model_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
 		self.PRTab_Model_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PRTab_Model_TB.setObjectName("PRTab_Model_TB")
@@ -2944,8 +2948,8 @@ class Ui_MainWindow(object):
 		self.PTab_Slot_26_LBL.setText(_translate("MainWindow", "Slot 26"))
 		self.PTab_Slot_27_LBL.setText(_translate("MainWindow", "Slot 27"))
 
-		self.PTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-		self.PTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+		self.PTab_Add_BTN.setText(_translate("MainWindow", "Add Powder"))
+		self.PTab_View_All_BTN.setText(_translate("MainWindow", "View All Powders"))
 		self.PTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
 		self.PTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
 		self.PTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
