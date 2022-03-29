@@ -13,23 +13,23 @@ import pandas as pd
 from PyQt5 import QtCore
 from PyQt5.QtGui import *
 
-class Ui_ShowPowders(object):
+class Ui_ShowCases(object):
     def __init__(self):
         self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-        self.powder_df = pd.read_sql("SELECT * FROM Powder", self.conn)
+        self.case_df = pd.read_sql("SELECT * FROM Case_table", self.conn)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 825)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.ShowAllFirearms = QtWidgets.QTextBrowser(self.centralwidget)
+        self.ShowAllCases = QtWidgets.QTextBrowser(self.centralwidget)
         # query db and display in window
-        self.ShowAllFirearms.setText(self.powder_df['Name'].to_string(index=False))
-        self.ShowAllFirearms.setFont(QFont('Times', 15))
-        self.ShowAllFirearms.setGeometry(QtCore.QRect(10, 10, 771, 781))
-        self.ShowAllFirearms.setAccessibleName("")
-        self.ShowAllFirearms.setObjectName("ShowAllPowders")
+        self.ShowAllCases.setText(self.case_df['Name'].to_string(index=False))
+        self.ShowAllCases.setFont(QFont('Times', 15))
+        self.ShowAllCases.setGeometry(QtCore.QRect(10, 10, 771, 781))
+        self.ShowAllCases.setAccessibleName("")
+        self.ShowAllCases.setObjectName("ShowAllPowders")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_ShowPowders()
+    ui = Ui_ShowCases()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

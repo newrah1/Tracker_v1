@@ -17,62 +17,7 @@ from matplotlib.figure import Figure
 from pandas import option_context
 
 from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Show_Firearms, Show_Powders, \
-	Show_Bullets
-
-
-class ShowAllBullets_PopUp(QWidget):
-	"""
-    This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window.
-    """
-
-	def config_query(self, query, text, return_value):
-		# save to DataFrame
-		df = pd.read_sql(query, self.conn)
-
-		if return_value == 'None':
-			pass
-		elif return_value == 'True':
-			# print the query
-			print("Query = ", query)
-
-			# print the number of rows
-			rows = df.shape[0]
-			print('{}{}\n'.format(text, rows))
-
-			print(df.to_string(max_rows=5))
-		return df
-
-	def __init__(self):
-		# set run parameters
-		self.parser = ConfigParser()
-		self.parser.read("./Tracker.ini")
-
-		self.conn = mysql.connector.connect(host=self.parser['SQL']['host'],
-											user=self.parser['SQL']['user'],
-											password=self.parser['SQL'][
-												'password'],
-											database=self.parser['SQL'][
-												'database'],
-											auth_plugin=self.parser['SQL'][
-												'auth_plugin']
-											)
-
-		super().__init__()
-		df = self.config_query(
-			"SELECT * FROM Configuration_V1.Bullet",
-			"Number of Bullets = ",
-			"None")
-
-		self.setWindowTitle("List of Bullets")
-		layout = QVBoxLayout()
-		self.label = QLabel(self)
-		self.label.setText(df['Name'].to_string(index=False))
-		self.label.setStyleSheet("border: 1px solid black;")
-		self.label.setAlignment(Qt.AlignLeft)
-		layout.addWidget(self.label)
-		self.setLayout(layout)
-
+	Show_Bullets, Show_Cases
 
 class ShowAllCases_PopUp(QWidget):
 	"""
@@ -481,11 +426,11 @@ class Ui_MainWindow(object):
 			self.PopUp_Case_Add.show()
 
 	def PopUp_ShowAllCases(self, checked):
-		if self.CTab_ShowCases_POP.isVisible():
-			self.CTab_ShowCases_POP.hide()
+		if self.PopUp_Case_Show.isVisible():
+			self.PopUp_Case_Show.hide()
 
 		else:
-			self.CTab_ShowCases_POP.show()
+			self.PopUp_Case_Show.show()
 
 	# CTab --------------------------------
 
@@ -1124,14 +1069,10 @@ class Ui_MainWindow(object):
 		self.BTab_View_All_BTN.setDefault(True)
 		self.BTab_View_All_BTN.setObjectName("BTab_View_All_BTN")
 		self.BTab_verticalLayout.addWidget(self.BTab_View_All_BTN)
-		#self.BTab_ShowBullets_POP = ShowAllCases_PopUp()
-		#self.BTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllBullets)
-
 		self.PopUp_Bullet_Show = QtWidgets.QMainWindow()
 		ShowAllBullets = Show_Bullets.Ui_ShowBullets()
 		ShowAllBullets.setupUi(self.PopUp_Bullet_Show)
 		self.BTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllBullets)
-
 		# BTab BTN 3
 		self.BTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
 		self.BTab_BTN_3.setDefault(True)
@@ -1736,8 +1677,16 @@ class Ui_MainWindow(object):
 		self.CTab_View_All_BTN.setDefault(True)
 		self.CTab_View_All_BTN.setObjectName("CTab_View_All_BTN")
 		self.CTab_verticalLayout.addWidget(self.CTab_View_All_BTN)
-		self.CTab_ShowCases_POP = ShowAllCases_PopUp()
+		#self.CTab_ShowCases_POP = ShowAllCases_PopUp()
+		#self.CTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllCases)
+
+		self.CTab_verticalLayout.addWidget(self.CTab_View_All_BTN)
+		self.PopUp_Case_Show = QtWidgets.QMainWindow()
+		ShowAllCases = Show_Cases.Ui_ShowCases()
+		ShowAllCases.setupUi(self.PopUp_Case_Show)
 		self.CTab_View_All_BTN.clicked.connect(self.PopUp_ShowAllCases)
+
+
 
 		self.CTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_BTN_3.setDefault(True)

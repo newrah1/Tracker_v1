@@ -15,11 +15,6 @@ from PyQt5.QtGui import *
 
 class Ui_ShowBullets(object):
     def __init__(self):
-        conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-
-        sql = "SELECT * from bullet"
-        cursor = conn.cursor()
-        cursor.execute(sql)
         self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
         self.bullet_df = pd.read_sql("SELECT * FROM bullet", self.conn)
 

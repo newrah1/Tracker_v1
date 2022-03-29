@@ -15,12 +15,6 @@ from PyQt5.QtGui import *
 
 class Ui_ShowFirearms(object):
     def __init__(self):
-        conn = sqlite3.connect("./DATABASE/TrackerDB.db")
-        print("Opened database successfully")
-
-        sql = "SELECT * from firearm"
-        cursor = conn.cursor()
-        cursor.execute(sql)
         self.conn = sqlite3.connect("./DATABASE/TrackerDB.db")
         self.firearm_df = pd.read_sql("SELECT * FROM Firearm", self.conn)
 
