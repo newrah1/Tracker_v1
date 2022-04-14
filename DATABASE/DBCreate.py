@@ -99,9 +99,10 @@ def firearm_table():
 				  Action_Type			TEXT,
 				  Caliber				TEXT,
 				  Overall_Length_Inch	DOUBLE,
+				  Barrel_Len_Inch		DOUBLE,
 				  Weight_Lb				DOUBLE,
 				  Twist_Rate			TEXT,
-				  Barrel_Len_Inch		DOUBLE,
+				  Thread_Size			TEXT,
 				  Notes					LONGTEXT,
 				  Picture				LONGTEXT
 				  );''')

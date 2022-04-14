@@ -154,8 +154,7 @@ class Ui_MainWindow(object):
 			Selected_Firearm = self.FTab_Firearm_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullets_df, powders_df, cases_df \
-				= self.query_databases()
+			firearm_df, bullets_df, powders_df, cases_df = self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Firearm))
@@ -660,7 +659,7 @@ class Ui_MainWindow(object):
 		self.FTab_gridLayout.addWidget(self.FTab_Slot_27_LBL, 30, 0, 1, 1)
 		# FTab Spacer
 
-		# FTab Add BTN
+		# FTab Add Firearm BTN
 		self.FTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
 		self.FTab_Add_BTN.setDefault(True)
 		self.FTab_Add_BTN.setObjectName("FTab_Add_BTN")
