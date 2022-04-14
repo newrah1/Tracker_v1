@@ -1009,7 +1009,7 @@ class Ui_MainWindow(object):
 
 		self.PopUp_Bullet_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Bullet from .\PopUp_Add_Bullet.py
-		addBullet = Add_Bullet.Ui_PopUp_Add_Bullet()
+		addBullet = Add_Bullet.Ui_PopUp_Add_Bullet(bullets_df)
 		addBullet.setupUi(self.PopUp_Bullet_Add)
 		self.BTab_Add_BTN.clicked.connect(self.PopUp_Add_Bullet_BTN)
 

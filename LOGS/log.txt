@@ -331,3 +331,89 @@
 13-Apr-22 20:13:15 - NumExpr defaulting to 6 threads.
 13-Apr-22 20:39:31 - NumExpr defaulting to 6 threads.
 13-Apr-22 21:11:58 - NumExpr defaulting to 6 threads.
+13-Apr-22 22:11:11 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('test1','','','','','','','','','','','','','')
+13-Apr-22 22:16:53 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('eerwertwert','','','','','','','','','','','','','')
+14-Apr-22 17:36:58 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Action_Type, Firearm_Type,   
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 17:38:25 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 17:39:45 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 17:56:50 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 17:58:00 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Action_Type, Firearm_Type,   
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 17:59:31 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Action_Type, Firearm_Type,   
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 18:02:32 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Action_Type, Firearm_Type,   
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 18:15:50 - INSERT INTO bullet 
+                (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight,
+                Bullet_Base, BC, Length_Inch, Notes, 
+                Picture) 
+                VALUES ('sdfgsdfg','','','','','','','','','','','','','')
+14-Apr-22 18:15:58 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Action_Type, Firearm_Type,   
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('sdfgsdfgsdfg','','','','','','','','','','','','','')
+14-Apr-22 18:18:36 - NumExpr defaulting to 6 threads.
+14-Apr-22 18:18:44 - INSERT INTO Firearm 
+            (Name, Manufacturer, Model, SKU, Caliber, Firearm_Type, Action_Type,    
+            Overall_Length_Inch, Barrel_Len_Inch, Weight_Lb, Twist_Rate, Thread_Size, Notes, 
+            Picture) 
+            VALUES ('','','','','','','','','','','','','','')
+14-Apr-22 18:21:17 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('fadfsdfg','','','','','','','','','','','','')
+14-Apr-22 18:21:32 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('test 77777','','','','','','','','','','','','')
+14-Apr-22 18:37:22 - INSERT INTO Bullet 
+            (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight, 
+            Bullet_Base, BC, Length_Inch, Notes, Picture) 
+            VALUES
+            ('test1','','','','','','','','','','','','','')
+14-Apr-22 18:38:01 - INSERT INTO Bullet 
+            (Name, Manufacturer, Model, SKU, Caliber, Type, Size_Inch, Size_mm, Weight, 
+            Bullet_Base, BC, Length_Inch, Notes, Picture) 
+            VALUES
+            ('1','2','3','4','5','6','7','8','10','9','11','12','dasdgsdgadsfasdf','')
+14-Apr-22 18:38:30 - INSERT INTO Firearm 
+            (Firearm_Type, Name, Manufacturer, Model, SKU, Action_Type, Caliber, Overall_Length_Inch, 
+            Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
+            VALUES
+            ('asdfadsf','','','','','','','','','','','','')
