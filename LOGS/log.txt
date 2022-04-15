@@ -417,3 +417,14 @@
             Weight_Lb, Twist_Rate, Barrel_Len_Inch, Notes, Picture) 
             VALUES
             ('asdfadsf','','','','','','','','','','','','')
+14-Apr-22 20:32:35 - NumExpr defaulting to 6 threads.
+14-Apr-22 20:47:43 - INSERT INTO Powder 
+            (Name, Manufacturer, Model, SKU, Relative_Burn_Rate, Weapon_Use, Density_lb, 
+            Bulk_Density, Notes, Picture) 
+            VALUES
+            ('test1','','','','','','','','','')
+14-Apr-22 20:47:48 - INSERT INTO Powder 
+            (Name, Manufacturer, Model, SKU, Relative_Burn_Rate, Weapon_Use, Density_lb, 
+            Bulk_Density, Notes, Picture) 
+            VALUES
+            ('test2','','','','','','','','','')

@@ -1325,7 +1325,7 @@ class Ui_MainWindow(object):
 		self.PTab_verticalLayout.addWidget(self.PTab_Add_BTN)
 
 		self.PopUp_Powder_Add = QtWidgets.QMainWindow()
-		addPowder = Add_Powder.Ui_PopUp_Add_Powder()
+		addPowder = Add_Powder.Ui_PopUp_Add_Powder(powders_df)
 		addPowder.setupUi(self.PopUp_Powder_Add)
 		self.PTab_Add_BTN.clicked.connect(self.PopUp_Add_Powder_BTN)
 
