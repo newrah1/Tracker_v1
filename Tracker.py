@@ -16,8 +16,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Show_Firearms, Show_Powders, \
-	Show_Bullets, Show_Cases
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Add_Primer, Show_Firearms, \
+	Show_Powders, Show_Bullets, Show_Cases
 
 class ShowAllSilencers_PopUp(QWidget):
 	"""
@@ -134,7 +134,8 @@ class Ui_MainWindow(object):
 			bullets_db = pd.read_sql("SELECT * FROM bullet", self.conn)
 			powders_db = pd.read_sql("SELECT * FROM powder", self.conn)
 			cases_db = pd.read_sql("SELECT * FROM Case_table", self.conn)
-			return firearm_db, bullets_db, powders_db, cases_db
+			primers_db = pd.read_sql("SELECT * FROM Primer", self.conn)
+			return firearm_db, bullets_db, powders_db, cases_db, primers_db
 		except Exception as e:
 			print("Exception = ", str(e))
 			traceback.print_exc()
@@ -389,6 +390,20 @@ class Ui_MainWindow(object):
 	def displayData_PRTab(self):
 		pass
 
+	def PopUp_Add_Primer_BTN(self):
+		if self.PopUp_Primer_Add.isVisible():
+			self.PopUp_Primer_Add.hide()
+
+		else:
+			self.PopUp_Primer_Add.show()
+
+	def PopUp_ShowAllPrimers(self, checked):
+		if self.PopUp_Primer_Show.isVisible():
+			self.PopUp_Primer_Show.hide()
+
+		else:
+			self.PopUp_Primer_Show.show()
+
 	# PRTab --------------------------------
 
 	# DTab --------------------------------
@@ -417,12 +432,13 @@ class Ui_MainWindow(object):
 
 	def setupUi(self, MainWindow):
 		# retrieve data from MySQL
-		firearms_df, bullets_df, powders_df, cases_df = self.query_databases()
+		firearms_df, bullets_df, powders_df, cases_df, primers_df = self.query_databases()
 		# Generate unique lists of data
 		firearms_list = firearms_df['Name'].unique().tolist()
 		bullets_list = bullets_df['Name'].unique().tolist()
 		powders_list = powders_df['Name'].unique().tolist()
 		cases_list = cases_df['Name'].unique().tolist()
+		primers_list = primers_df['Name'].unique().tolist()
 
 		# Main Window setup
 		MainWindow.setObjectName("MainWindow")
@@ -1950,10 +1966,18 @@ class Ui_MainWindow(object):
 		self.PRTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.PRTab_ShowData_BTN.setDefault(True)
 		self.PRTab_ShowData_BTN.setObjectName("PRTab_ShowData_BTN")
+		# Add Primer BTN
 		self.PRTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_Add_BTN.setDefault(True)
 		self.PRTab_Add_BTN.setObjectName("PRTab_Add_BTN")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_Add_BTN)
+
+		self.PopUp_Primer_Add = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
+		addPrimer = Add_Primer.Ui_PopUp_Add_Primer(primers_df)
+		addPrimer.setupUi(self.PopUp_Primer_Add)
+		self.PRTab_Add_BTN.clicked.connect(self.PopUp_Add_Primer_BTN)
+
 		self.PRTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_View_All_BTN.setAutoDefault(False)
 		self.PRTab_View_All_BTN.setDefault(True)
