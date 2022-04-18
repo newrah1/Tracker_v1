@@ -428,3 +428,11 @@
             Bulk_Density, Notes, Picture) 
             VALUES
             ('test2','','','','','','','','','')
+17-Apr-22 22:21:51 - INSERT INTO Case_table 
+               (Name, Manufacturer, Model, SKU, Finish, Primer_Size, Notes, Picture) 
+               VALUES
+               ('case test 1','','','','','','','')
+17-Apr-22 22:21:56 - INSERT INTO Case_table 
+               (Name, Manufacturer, Model, SKU, Finish, Primer_Size, Notes, Picture) 
+               VALUES
+               ('case test 2','','','','','','','')

@@ -1645,7 +1645,7 @@ class Ui_MainWindow(object):
 		# CTab Add Case
 		self.PopUp_Case_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Case from .\PopUp_Add_Case.py
-		addCase = Add_Case.Ui_PopUp_Add_Case()
+		addCase = Add_Case.Ui_PopUp_Add_Case(cases_df)
 		addCase.setupUi(self.PopUp_Case_Add)
 		self.CTab_Add_BTN.clicked.connect(self.PopUp_Add_Case_BTN)
 		# CTab View All cases BTN
