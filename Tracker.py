@@ -155,7 +155,7 @@ class Ui_MainWindow(object):
 			Selected_Firearm = self.FTab_Firearm_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullets_df, powders_df, cases_df = self.query_databases()
+			firearm_df, bullets_df, powders_df, cases_df, primers_df = self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Firearm))
@@ -238,7 +238,7 @@ class Ui_MainWindow(object):
 			Selected_Bullet = self.BTab_Bullet_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powders_df, cases_df = self.query_databases()
+			firearm_df, bullet_df, powders_df, cases_df, primers_df = self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Bullet))
@@ -305,7 +305,7 @@ class Ui_MainWindow(object):
 			Selected_Powder = self.PTab_Powder_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powder_df, cases_df = self.query_databases()
+			firearm_df, bullet_df, powder_df, cases_df, primers_df = self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Powder))
@@ -368,7 +368,50 @@ class Ui_MainWindow(object):
 
 	# CTab --------------------------------
 	def displayData_CTab(self):
-		pass
+		try:
+			# get the value from the Powder comboBox
+			Selected_Case = self.CTab_Cases_Combo.currentText()
+
+			# query the DB save to df
+			firearm_df, bullet_df, powder_df, case_df, primers_df = self.query_databases()
+
+			# filter by selected firearm
+			query = '{}"{}"'.format("Name == ", str(Selected_Case))
+			case_df = case_df.query(query)
+
+			# clear the form
+			self.CTab_Name_TB.clear()
+			self.CTab_Manufacturer_TB.clear()
+			self.CTab_Model_TB.clear()
+			self.CTab_SKU_TB.clear()
+			self.CTab_Finish_TB.clear()
+			self.CTab_PrimerSize_TB.clear()
+			self.CTab_Notes_TB.clear()
+			self.CTab_Picture_LBL.clear()
+
+			# fill in the form
+			self.CTab_Name_TB.setText(case_df['Name'].to_string(index=False))
+			self.CTab_Manufacturer_TB.setText(case_df['Manufacturer'].to_string(index=False))
+			self.CTab_Model_TB.setText(case_df['Model'].to_string(index=False))
+			self.CTab_SKU_TB.setText(case_df['SKU'].to_string(index=False))
+			self.CTab_Finish_TB.setText(case_df['Finish'].to_string(index=False))
+			self.CTab_PrimerSize_TB.setText(case_df['Primer_Size'].to_string(index=False))
+			self.CTab_Notes_TB.setText(case_df['Notes'].to_string(index=False))
+
+			# Context manager to temporarily set options in the with statement context.
+			# required to display 'Notes'
+			with option_context('display.max_colwidth', None):
+				self.CTab_Notes_TB.setText(case_df['Notes'].to_string(index=False))
+				# Display picture of Bullet in GUI
+				high_rez = QtCore.QSize(400, 400)
+				picture = '{}{}'.format("./picts/", case_df['Picture'].to_string(index=False))
+				pixmap = QtGui.QPixmap(picture)
+				pixmap = pixmap.scaled(high_rez, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+				self.CTab_Picture_LBL.setPixmap(pixmap)
+
+		except Exception as e:
+			print("Exception = ", str(e))
+			traceback.print_exc()
 
 	def PopUp_Add_Case_BTN(self):
 		if self.PopUp_Case_Add.isVisible():
@@ -1636,7 +1679,7 @@ class Ui_MainWindow(object):
 		self.CTab_Picture_LBL = QtWidgets.QLabel(self.CTab_tab)
 		self.CTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
 		self.CTab_Picture_LBL.setText("")
-		self.CTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+		#self.CTab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
 		self.CTab_Picture_LBL.setScaledContents(True)
 		self.CTab_Picture_LBL.setObjectName("CTab_Picture_LBL")
 
@@ -1653,6 +1696,7 @@ class Ui_MainWindow(object):
 		self.CTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.CTab_ShowData_BTN.setDefault(True)
 		self.CTab_ShowData_BTN.setObjectName("CTab_ShowData_BTN")
+		self.CTab_ShowData_BTN.clicked.connect(self.displayData_CTab)
 		# CTab Add Case to DB BTN
 		self.CTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
 		self.CTab_Add_BTN.setDefault(True)
@@ -1939,7 +1983,7 @@ class Ui_MainWindow(object):
 		self.PRTab_Slot_27_TB.setMaximumSize(QtCore.QSize(362, 26))
 		self.PRTab_Slot_27_TB.setObjectName("PRTab_Slot_27_TB")
 		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_27_TB, 23, 1, 1, 1)
-		# Notes
+		# PRTab Notes
 		self.PRTab_Notes_TB = QtWidgets.QTextBrowser(self.PRTab_tab)
 		self.PRTab_Notes_TB.setGeometry(QtCore.QRect(490, 450, 601, 501))
 		self.PRTab_Notes_TB.setObjectName("PRTab_Notes_TB")
@@ -1947,7 +1991,7 @@ class Ui_MainWindow(object):
 		self.PRTab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
 		self.PRTab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
 		self.PRTab_Notes_LBL.setObjectName("PRTab_Notes_LBL")
-		# Pictrue
+		# PRTab Pictrue
 		self.PRTab_Picture_LBL = QtWidgets.QLabel(self.PRTab_tab)
 		self.PRTab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
 		self.PRTab_Picture_LBL.setText("")
@@ -1961,58 +2005,65 @@ class Ui_MainWindow(object):
 		self.PRTab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_6)
 		self.PRTab_verticalLayout.setContentsMargins(0, 0, 0, 0)
 		self.PRTab_verticalLayout.setObjectName("PRTab_verticalLayout")
-
+		# PRTab Show Primer Data
 		self.PRTab_ShowData_BTN = QtWidgets.QPushButton(self.PRTab_tab)
 		self.PRTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.PRTab_ShowData_BTN.setDefault(True)
 		self.PRTab_ShowData_BTN.setObjectName("PRTab_ShowData_BTN")
-		# Add Primer BTN
+		# PRTab Add Primer BTN
 		self.PRTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_Add_BTN.setDefault(True)
 		self.PRTab_Add_BTN.setObjectName("PRTab_Add_BTN")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_Add_BTN)
-
 		self.PopUp_Primer_Add = QtWidgets.QMainWindow()
 		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
 		addPrimer = Add_Primer.Ui_PopUp_Add_Primer(primers_df)
 		addPrimer.setupUi(self.PopUp_Primer_Add)
 		self.PRTab_Add_BTN.clicked.connect(self.PopUp_Add_Primer_BTN)
-
+		# PRTab View All BTN
 		self.PRTab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_View_All_BTN.setAutoDefault(False)
 		self.PRTab_View_All_BTN.setDefault(True)
 		self.PRTab_View_All_BTN.setObjectName("PRTab_View_All_BTN")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_View_All_BTN)
+		# PRTab BTN 3
 		self.PRTab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_3.setDefault(True)
 		self.PRTab_BTN_3.setObjectName("PRTab_BTN_3")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_3)
+		# PRTab BTN 4
 		self.PRTab_BTN_4 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_4.setDefault(True)
 		self.PRTab_BTN_4.setObjectName("PRTab_BTN_4")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_4)
+		# PRTab BTN 5
 		self.PRTab_BTN_5 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_5.setDefault(True)
 		self.PRTab_BTN_5.setObjectName("PRTab_BTN_5")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_5)
+		# PRTab BTN 6
 		self.PRTab_BTN_6 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_6.setDefault(True)
 		self.PRTab_BTN_6.setObjectName("PRTab_BTN_6")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_6)
+		# PRTab BTN 7
 		self.PRTab_BTN_7 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_7.setDefault(True)
 		self.PRTab_BTN_7.setObjectName("PRTab_BTN_7")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_7)
+		# PRTab BTN 8
 		self.PRTab_BTN_8 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_8.setAutoDefault(False)
 		self.PRTab_BTN_8.setDefault(True)
 		self.PRTab_BTN_8.setObjectName("PRTab_BTN_8")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_8)
+		# PRTab BTN 9
 		self.PRTab_BTN_9 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_9.setAutoDefault(False)
 		self.PRTab_BTN_9.setDefault(True)
 		self.PRTab_BTN_9.setObjectName("PRTab_BTN_9")
 		self.PRTab_verticalLayout.addWidget(self.PRTab_BTN_9)
+		# PRTab BTN 10
 		self.PRTab_BTN_10 = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_BTN_10.setAutoDefault(False)
 		self.PRTab_BTN_10.setDefault(True)
@@ -2968,8 +3019,8 @@ class Ui_MainWindow(object):
 		self.PRTab_Primer_LBL.setText(_translate("MainWindow", "Primer"))
 
 		self.PRTab_ShowData_BTN.setText(_translate("MainWindow", "Show Data"))
-		self.PRTab_Add_BTN.setText(_translate("MainWindow", "Add Firearm"))
-		self.PRTab_View_All_BTN.setText(_translate("MainWindow", "View All Firearms"))
+		self.PRTab_Add_BTN.setText(_translate("MainWindow", "Add Primer"))
+		self.PRTab_View_All_BTN.setText(_translate("MainWindow", "View All Primers"))
 		self.PRTab_BTN_3.setText(_translate("MainWindow", "Button 3"))
 		self.PRTab_BTN_4.setText(_translate("MainWindow", "Button 4"))
 		self.PRTab_BTN_5.setText(_translate("MainWindow", "Button 5"))
@@ -2978,10 +3029,8 @@ class Ui_MainWindow(object):
 		self.PRTab_BTN_8.setText(_translate("MainWindow", "Button 8"))
 		self.PRTab_BTN_9.setText(_translate("MainWindow", "Button 9"))
 		self.PRTab_BTN_10.setText(_translate("MainWindow", "Button 10"))
-		self.tabWidget.setTabText(self.tabWidget.indexOf(self.PRTab_tab),
-								  _translate("MainWindow", "Primers"))
-
-
+		self.tabWidget.setTabText(self.tabWidget.indexOf(self.PRTab_tab), _translate(
+			"MainWindow", "Primers"))
 
 		self.DTab_Notes_LBL.setText(_translate("MainWindow", "Notes"))
 		self.DTab_Firearm_LBL.setText(_translate("MainWindow", "Firearm"))

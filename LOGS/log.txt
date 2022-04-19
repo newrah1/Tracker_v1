@@ -2,3 +2,9 @@
                (Name, Manufacturer, Model, SKU, Size, PrimerType, Notes, Picture) 
                VALUES
                ('primer test 1','','','','','','','')
+18-Apr-22 20:49:02 - NumExpr defaulting to 6 threads.
+18-Apr-22 20:51:30 - NumExpr defaulting to 6 threads.
+18-Apr-22 20:54:56 - NumExpr defaulting to 6 threads.
+18-Apr-22 21:07:18 - NumExpr defaulting to 6 threads.
+18-Apr-22 21:21:27 - NumExpr defaulting to 6 threads.
+18-Apr-22 21:27:24 - NumExpr defaulting to 6 threads.
