@@ -431,7 +431,50 @@ class Ui_MainWindow(object):
 
 	# PRTab --------------------------------
 	def displayData_PRTab(self):
-		pass
+		try:
+			# get the value from the Powder comboBox
+			Selected_Primer = self.PRTab_Primer_Combo.currentText()
+
+			# query the DB save to df
+			firearm_df, bullet_df, powder_df, case_df, primer_df = self.query_databases()
+
+			# filter by selected firearm
+			query = '{}"{}"'.format("Name == ", str(Selected_Primer))
+			primer_df = primer_df.query(query)
+
+			# clear the form
+			self.PRTab_Name_TB.clear()
+			self.PRTab_Manufacturer_TB.clear()
+			self.PRTab_Model_TB.clear()
+			self.PRTab_SKU_TB.clear()
+			self.PRTab_Size_TB.clear()
+			self.PRTab_Type_TB.clear()
+			self.PRTab_Notes_TB.clear()
+			self.PRTab_Picture_LBL.clear()
+
+			# fill in the form
+			self.PRTab_Name_TB.setText(primer_df['Name'].to_string(index=False))
+			self.PRTab_Manufacturer_TB.setText(primer_df['Manufacturer'].to_string(index=False))
+			self.PRTab_Model_TB.setText(primer_df['Model'].to_string(index=False))
+			self.PRTab_SKU_TB.setText(primer_df['SKU'].to_string(index=False))
+			self.PRTab_Size_TB.setText(primer_df['Size'].to_string(index=False))
+			self.PRTab_Type_TB.setText(primer_df['PrimerType'].to_string(index=False))
+			self.PRTab_Notes_TB.setText(primer_df['Notes'].to_string(index=False))
+
+			# Context manager to temporarily set options in the with statement context.
+			# required to display 'Notes'
+			with option_context('display.max_colwidth', None):
+				self.PRTab_Notes_TB.setText(primer_df['Notes'].to_string(index=False))
+				# Display picture of Bullet in GUI
+				high_rez = QtCore.QSize(400, 400)
+				picture = '{}{}'.format("./picts/", primer_df['Picture'].to_string(index=False))
+				pixmap = QtGui.QPixmap(picture)
+				pixmap = pixmap.scaled(high_rez, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+				self.PRTab_Picture_LBL.setPixmap(pixmap)
+
+		except Exception as e:
+			print("Exception = ", str(e))
+			traceback.print_exc()
 
 	def PopUp_Add_Primer_BTN(self):
 		if self.PopUp_Primer_Add.isVisible():
@@ -1928,13 +1971,13 @@ class Ui_MainWindow(object):
 		self.PRTab_Slot_20_TB.setObjectName("PRTab_Slot_20_TB")
 		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_20_TB, 16, 1, 1, 1)
 		# PRTab Slot 21
-		self.PRTab_Slot_10_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
-		self.PRTab_Slot_10_TB.setMaximumSize(QtCore.QSize(362, 26))
-		self.PRTab_Slot_10_TB.setObjectName("PRTab_Slot_21_TB")
-		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_10_TB, 17, 1, 1, 1)
-		self.PRTab_Slot_10_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
-		self.PRTab_Slot_10_LBL.setObjectName("PRTab_Slot_21_LBL")
-		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_10_LBL, 17, 0, 1, 1)
+		self.PRTab_Slot_21_TB = QtWidgets.QTextBrowser(self.formLayoutWidget_6)
+		self.PRTab_Slot_21_TB.setMaximumSize(QtCore.QSize(362, 26))
+		self.PRTab_Slot_21_TB.setObjectName("PRTab_Slot_21_TB")
+		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_21_TB, 17, 1, 1, 1)
+		self.PRTab_Slot_21_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
+		self.PRTab_Slot_21_LBL.setObjectName("PRTab_Slot_21_LBL")
+		self.PRTab_gridLayout.addWidget(self.PRTab_Slot_21_LBL, 17, 0, 1, 1)
 		# PRTab Slot 22
 		self.PRTab_Slot_22_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
 		self.PRTab_Slot_22_LBL.setObjectName("PRTab_Slot_22_LBL")
@@ -2010,6 +2053,7 @@ class Ui_MainWindow(object):
 		self.PRTab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.PRTab_ShowData_BTN.setDefault(True)
 		self.PRTab_ShowData_BTN.setObjectName("PRTab_ShowData_BTN")
+		self.PRTab_ShowData_BTN.clicked.connect(self.displayData_PRTab)
 		# PRTab Add Primer BTN
 		self.PRTab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_6)
 		self.PRTab_Add_BTN.setDefault(True)
@@ -2333,10 +2377,7 @@ class Ui_MainWindow(object):
 		# STab --------------------------------
 		self.STab_tab = QtWidgets.QWidget()
 		self.STab_tab.setObjectName("STab_tab")
-		self.STab_Notes_LBL = QtWidgets.QLabel(self.STab_tab)
-		self.STab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
-		self.STab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
-		self.STab_Notes_LBL.setObjectName("STab_Notes_LBL")
+		# STab Combo Box
 		self.STab_SILIENCER_Combo = QtWidgets.QComboBox(self.STab_tab)
 		self.STab_SILIENCER_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
 		self.STab_SILIENCER_Combo.setObjectName("STab_SILIENCER_Combo")
@@ -2344,25 +2385,34 @@ class Ui_MainWindow(object):
 		self.STab_SILIENCER_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
 		self.STab_SILIENCER_LBL.setAlignment(QtCore.Qt.AlignCenter)
 		self.STab_SILIENCER_LBL.setObjectName("STab_SILIENCER_LBL")
-		self.STab_Notes_TB = QtWidgets.QTextBrowser(self.STab_tab)
-		self.STab_Notes_TB.setGeometry(QtCore.QRect(490, 450, 601, 501))
-		self.STab_Notes_TB.setObjectName("STab_Notes_TB")
-		self.STab_ShowData_BTN = QtWidgets.QPushButton(self.STab_tab)
-		self.STab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
-		self.STab_ShowData_BTN.setDefault(True)
-		self.STab_ShowData_BTN.setObjectName("STab_ShowData_BTN")
-		self.STab_Picture_LBL = QtWidgets.QLabel(self.STab_tab)
-		self.STab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
-		self.STab_Picture_LBL.setText("")
-		self.STab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
-		self.STab_Picture_LBL.setScaledContents(True)
-		self.STab_Picture_LBL.setObjectName("STab_Picture_LBL")
 		self.formLayoutWidget_8 = QtWidgets.QWidget(self.STab_tab)
 		self.formLayoutWidget_8.setGeometry(QtCore.QRect(10, 60, 471, 928))
 		self.formLayoutWidget_8.setObjectName("formLayoutWidget_8")
 		self.STab_gridLayout = QtWidgets.QGridLayout(self.formLayoutWidget_8)
 		self.STab_gridLayout.setContentsMargins(0, 0, 0, 0)
 		self.STab_gridLayout.setObjectName("STab_gridLayout")
+
+		# STab Notes
+		self.STab_Notes_LBL = QtWidgets.QLabel(self.STab_tab)
+		self.STab_Notes_LBL.setGeometry(QtCore.QRect(490, 430, 601, 20))
+		self.STab_Notes_LBL.setAlignment(QtCore.Qt.AlignCenter)
+		self.STab_Notes_LBL.setObjectName("STab_Notes_LBL")
+		self.STab_Notes_TB = QtWidgets.QTextBrowser(self.STab_tab)
+		self.STab_Notes_TB.setGeometry(QtCore.QRect(490, 450, 601, 501))
+		self.STab_Notes_TB.setObjectName("STab_Notes_TB")
+		# STab ShowData BTN
+		self.STab_ShowData_BTN = QtWidgets.QPushButton(self.STab_tab)
+		self.STab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
+		self.STab_ShowData_BTN.setDefault(True)
+		self.STab_ShowData_BTN.setObjectName("STab_ShowData_BTN")
+		# Stab Picture
+		self.STab_Picture_LBL = QtWidgets.QLabel(self.STab_tab)
+		self.STab_Picture_LBL.setGeometry(QtCore.QRect(660, 100, 431, 231))
+		self.STab_Picture_LBL.setText("")
+		self.STab_Picture_LBL.setPixmap(QtGui.QPixmap("../picts/Savage_110_Elite_Precision.png"))
+		self.STab_Picture_LBL.setScaledContents(True)
+		self.STab_Picture_LBL.setObjectName("STab_Picture_LBL")
+
 		self.STab_TwistRate_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
 		self.STab_TwistRate_LBL.setObjectName("STab_TwistRate_LBL")
 		self.STab_gridLayout.addWidget(self.STab_TwistRate_LBL, 10, 0, 1, 1)
@@ -3007,7 +3057,7 @@ class Ui_MainWindow(object):
 		self.PRTab_Slot_18_LBL.setText(_translate("MainWindow", "Slot 18"))
 		self.PRTab_Slot_19_LBL.setText(_translate("MainWindow", "Slot 19"))
 		self.PRTab_Slot_20_LBL.setText(_translate("MainWindow", "Slot 20"))
-		self.PRTab_Slot_10_LBL.setText(_translate("MainWindow", "Slot 21"))
+		self.PRTab_Slot_21_LBL.setText(_translate("MainWindow", "Slot 21"))
 		self.PRTab_Slot_22_LBL.setText(_translate("MainWindow", "Slot 22"))
 		self.PRTab_Slot_23_LBL.setText(_translate("MainWindow", "Slot 23"))
 		self.PRTab_Slot_24_LBL.setText(_translate("MainWindow", "Slot 24"))
