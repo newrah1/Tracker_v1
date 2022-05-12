@@ -11,3 +11,7 @@
 18-Apr-22 22:00:02 - NumExpr defaulting to 6 threads.
 18-Apr-22 22:04:05 - NumExpr defaulting to 6 threads.
 21-Apr-22 19:55:31 - NumExpr defaulting to 6 threads.
+12-May-22 18:52:07 - NumExpr defaulting to 6 threads.
+12-May-22 18:53:04 - NumExpr defaulting to 6 threads.
+12-May-22 18:53:38 - NumExpr defaulting to 6 threads.
+12-May-22 18:54:11 - NumExpr defaulting to 6 threads.

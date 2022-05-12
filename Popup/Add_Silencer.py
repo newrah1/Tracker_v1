@@ -9,9 +9,66 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QCoreApplication
 
+import sqlite3
+import logging
+import traceback
 
 class Ui_PopUp_Add_Silencer(object):
+    def __init__(self, primer_df):
+        super().__init__()
+        self.primer_df = primer_df
+
+    def WriteToDB(self):
+        try:
+            name = self.Name_TE.toPlainText()
+            manufacturer = self.Manufacturer_TE.toPlainText()
+            model = self.Model_TE.toPlainText()
+            sku = self.SKU_TE.toPlainText()
+            size = self.Size_TE.toPlainText()
+            primertype = self.PrimerType_TE.toPlainText()
+            note = self.Notes_TE.toPlainText()
+            picture = self.Picture_TE.toPlainText()
+            slot10 = self.Slot_10_TE.toPlainText()
+            slot11 = self.Slot_11_TE.toPlainText()
+            slot12 = self.Slot_12_TE.toPlainText()
+            slot13 = self.Slot_13_TE.toPlainText()
+            slot14 = self.Slot_14_TE.toPlainText()
+            slot15 = self.Slot_15_TE.toPlainText()
+            slot16 = self.Slot_16_TE.toPlainText()
+            slot17 = self.Slot_17_TE.toPlainText()
+            slot18 = self.Slot_18_TE.toPlainText()
+            slot19 = self.Slot_19_TE.toPlainText()
+            slot20 = self.Slot_20_TE.toPlainText()
+            slot21 = self.Slot_21_TE.toPlainText()
+            slot22 = self.Slot_22_TE.toPlainText()
+            slot23 = self.Slot_23_TE.toPlainText()
+            slot24 = self.Slot_24_TE.toPlainText()
+            slot25 = self.Slot_25_TE.toPlainText()
+            slot26 = self.Slot_26_TE.toPlainText()
+            slot27 = self.Slot_27_TE.toPlainText()
+
+            sql = '{}'.format("""INSERT INTO Silencer 
+               (Name, Manufacturer, Model, SKU, Size, PrimerType, Notes, Picture) 
+               VALUES
+               ('%s','%s','%s','%s','%s','%s','%s','%s')"""
+                              % (
+                                  name, manufacturer, model, sku, size, primertype, note, picture)
+                              )
+
+            conn = sqlite3.connect("./DATABASE/TrackerDB.db")
+            print("Opened database successfully")
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+            logging.info(sql)
+
+        except Exception as e:
+            print("Exception = ", str(e))
+            traceback.print_exc()
+            logging.error("ERROR --- ", str(e))
+
     def setupUi(self, PopUp_Add_Silencer):
         PopUp_Add_Silencer.setObjectName("PopUp_Add_Silencer")
         PopUp_Add_Silencer.resize(1359, 825)

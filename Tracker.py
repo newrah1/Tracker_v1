@@ -16,8 +16,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from pandas import option_context
 
-from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Add_Primer, Show_Firearms, \
-	Show_Powders, Show_Bullets, Show_Cases
+from Popup import Add_Bullet, Add_Case, Add_Firearm, Add_Powder, Add_Primer, Add_Silencer, \
+	Show_Firearms, Show_Powders, Show_Bullets, Show_Cases
 
 class ShowAllSilencers_PopUp(QWidget):
 	"""
@@ -130,12 +130,13 @@ class Ui_MainWindow(object):
 	def query_databases(self):
 		"Read SQL DB's and return dataframes of the data "
 		try:
-			firearm_db = pd.read_sql("SELECT * FROM Firearm", self.conn)
-			bullets_db = pd.read_sql("SELECT * FROM bullet", self.conn)
-			powders_db = pd.read_sql("SELECT * FROM powder", self.conn)
-			cases_db = pd.read_sql("SELECT * FROM Case_table", self.conn)
-			primers_db = pd.read_sql("SELECT * FROM Primer", self.conn)
-			return firearm_db, bullets_db, powders_db, cases_db, primers_db
+			firearm_df = pd.read_sql("SELECT * FROM Firearm", self.conn)
+			bullet_df = pd.read_sql("SELECT * FROM bullet", self.conn)
+			powder_df = pd.read_sql("SELECT * FROM powder", self.conn)
+			case_df = pd.read_sql("SELECT * FROM Case_table", self.conn)
+			primer_df = pd.read_sql("SELECT * FROM Primer", self.conn)
+			silencer_df = pd.read_sql("SELECT * FROM Silencer", self.conn)
+			return firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df
 		except Exception as e:
 			print("Exception = ", str(e))
 			traceback.print_exc()
@@ -155,7 +156,8 @@ class Ui_MainWindow(object):
 			Selected_Firearm = self.FTab_Firearm_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullets_df, powders_df, cases_df, primers_df = self.query_databases()
+			firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df = \
+				self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Firearm))
@@ -238,7 +240,8 @@ class Ui_MainWindow(object):
 			Selected_Bullet = self.BTab_Bullet_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powders_df, cases_df, primers_df = self.query_databases()
+			firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df = \
+				self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Bullet))
@@ -305,7 +308,8 @@ class Ui_MainWindow(object):
 			Selected_Powder = self.PTab_Powder_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powder_df, cases_df, primers_df = self.query_databases()
+			firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df = \
+				self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Powder))
@@ -373,7 +377,8 @@ class Ui_MainWindow(object):
 			Selected_Case = self.CTab_Cases_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powder_df, case_df, primers_df = self.query_databases()
+			firearm_df, bullets_df, powders_df, case_df, primers_df, silencer_df = \
+				self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Case))
@@ -436,7 +441,8 @@ class Ui_MainWindow(object):
 			Selected_Primer = self.PRTab_Primer_Combo.currentText()
 
 			# query the DB save to df
-			firearm_df, bullet_df, powder_df, case_df, primer_df = self.query_databases()
+			firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df = \
+				self.query_databases()
 
 			# filter by selected firearm
 			query = '{}"{}"'.format("Name == ", str(Selected_Primer))
@@ -508,6 +514,13 @@ class Ui_MainWindow(object):
 		else:
 			self.STab_ShowSilencers_POP.show()
 
+	def PopUp_Add_Silencer_BTN(self):
+		if self.PopUp_Silencer_Add.isVisible():
+			self.PopUp_Silencer_Add.hide()
+
+		else:
+			self.PopUp_Silencer_Add.show()
+
 	# STab --------------------------------
 
 	# MTab --------------------------------
@@ -518,7 +531,8 @@ class Ui_MainWindow(object):
 
 	def setupUi(self, MainWindow):
 		# retrieve data from MySQL
-		firearms_df, bullets_df, powders_df, cases_df, primers_df = self.query_databases()
+		firearms_df, bullets_df, powders_df, cases_df, primers_df, silencer_df = \
+			self.query_databases()
 		# Generate unique lists of data
 		firearms_list = firearms_df['Name'].unique().tolist()
 		bullets_list = bullets_df['Name'].unique().tolist()
@@ -2402,10 +2416,6 @@ class Ui_MainWindow(object):
 		self.STab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_8)
 		self.STab_verticalLayout.setContentsMargins(0, 0, 0, 0)
 		self.STab_verticalLayout.setObjectName("STab_verticalLayout")
-		self.STab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
-		self.STab_Add_BTN.setDefault(True)
-		self.STab_Add_BTN.setObjectName("STab_Add_BTN")
-		self.STab_verticalLayout.addWidget(self.STab_Add_BTN)
 
 		# STab ShowData BTN
 		self.STab_ShowData_BTN = QtWidgets.QPushButton(self.STab_tab)
@@ -2620,7 +2630,6 @@ class Ui_MainWindow(object):
 		self.STab_Slot_27_TB.setObjectName("STab_Slot_27_TB")
 		self.STab_gridLayout.addWidget(self.STab_Slot_27_TB, 23, 1, 1, 1)
 
-
 		# STab Show All BTN
 		self.STab_View_All_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_View_All_BTN.setAutoDefault(False)
@@ -2629,37 +2638,55 @@ class Ui_MainWindow(object):
 		self.STab_verticalLayout.addWidget(self.STab_View_All_BTN)
 		self.STab_ShowSilencers_POP = ShowAllSilencers_PopUp()
 		self.STab_View_All_BTN.clicked.connect(self.PopUp_ShowAllSilencers)
+		# STab Add Silencer BTN
+		self.STab_Add_BTN = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
+		self.STab_Add_BTN.setDefault(True)
+		self.STab_Add_BTN.setObjectName("STab_Add_BTN")
+		self.STab_verticalLayout.addWidget(self.STab_Add_BTN)
+		self.PopUp_Silencer_Add = QtWidgets.QMainWindow()
+		# import class UI_PopUp_Add_Firearm from .\PopUp_Add_Firearm.py
+		addSilencer = Add_Silencer.Ui_PopUp_Add_Silencer(silencer_df)
+		addSilencer.setupUi(self.PopUp_Silencer_Add)
+		self.STab_Add_BTN.clicked.connect(self.PopUp_Add_Silencer_BTN)
 
+		# STab BTN 3
 		self.STab_BTN_3 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_3.setDefault(True)
 		self.STab_BTN_3.setObjectName("STab_BTN_3")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_3)
+		# STab BTN 4
 		self.STab_BTN_4 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_4.setDefault(True)
 		self.STab_BTN_4.setObjectName("STab_BTN_4")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_4)
+		# STab BTN 5
 		self.STab_BTN_5 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_5.setDefault(True)
 		self.STab_BTN_5.setObjectName("STab_BTN_5")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_5)
+		# STab BTN 6
 		self.STab_BTN_6 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_6.setDefault(True)
 		self.STab_BTN_6.setObjectName("STab_BTN_6")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_6)
+		# STab BTN 7
 		self.STab_BTN_7 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_7.setDefault(True)
 		self.STab_BTN_7.setObjectName("STab_BTN_7")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_7)
+		# STab BTN 8
 		self.STab_BTN_8 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_8.setAutoDefault(False)
 		self.STab_BTN_8.setDefault(True)
 		self.STab_BTN_8.setObjectName("STab_BTN_8")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_8)
+		# STab BTN 9
 		self.STab_BTN_9 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_9.setAutoDefault(False)
 		self.STab_BTN_9.setDefault(True)
 		self.STab_BTN_9.setObjectName("STab_BTN_9")
 		self.STab_verticalLayout.addWidget(self.STab_BTN_9)
+		# STab BTN 10
 		self.STab_BTN_10 = QtWidgets.QPushButton(self.verticalLayoutWidget_8)
 		self.STab_BTN_10.setAutoDefault(False)
 		self.STab_BTN_10.setDefault(True)
