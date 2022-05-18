@@ -16,9 +16,9 @@ import logging
 import traceback
 
 class Ui_PopUp_Add_Silencer(object):
-    def __init__(self, primer_df):
+    def __init__(self, silencer_df):
         super().__init__()
-        self.primer_df = primer_df
+        self.silencer_df = silencer_df
 
     def WriteToDB(self):
         try:
@@ -26,12 +26,11 @@ class Ui_PopUp_Add_Silencer(object):
             manufacturer = self.Manufacturer_TE.toPlainText()
             model = self.Model_TE.toPlainText()
             sku = self.SKU_TE.toPlainText()
-            size = self.Size_TE.toPlainText()
-            primertype = self.PrimerType_TE.toPlainText()
+            caliber = self.Caliber_TE.toPlainText()
+            Olength = self.OverLength_TE.toPlainText()
+            weight = self.Weight_TE.toPlainText()
             note = self.Notes_TE.toPlainText()
             picture = self.Picture_TE.toPlainText()
-            slot10 = self.Slot_10_TE.toPlainText()
-            slot11 = self.Slot_11_TE.toPlainText()
             slot12 = self.Slot_12_TE.toPlainText()
             slot13 = self.Slot_13_TE.toPlainText()
             slot14 = self.Slot_14_TE.toPlainText()
@@ -50,11 +49,13 @@ class Ui_PopUp_Add_Silencer(object):
             slot27 = self.Slot_27_TE.toPlainText()
 
             sql = '{}'.format("""INSERT INTO Silencer 
-               (Name, Manufacturer, Model, SKU, Size, PrimerType, Notes, Picture) 
+               (Name, Manufacturer, Model, SKU, Caliber, Overall_Len_Inch, Weight_lb,  Notes, 
+               Picture) 
                VALUES
-               ('%s','%s','%s','%s','%s','%s','%s','%s')"""
+               ('%s','%s','%s','%s','%s','%s','%s','%s','%s')"""
                               % (
-                                  name, manufacturer, model, sku, size, primertype, note, picture)
+                                  name, manufacturer, model, sku, caliber, Olength, weight, note,
+                                  picture)
                               )
 
             conn = sqlite3.connect("./DATABASE/TrackerDB.db")
@@ -91,6 +92,7 @@ class Ui_PopUp_Add_Silencer(object):
         self.AddSilencer_BTN.setGeometry(QtCore.QRect(1010, 780, 171, 32))
         self.AddSilencer_BTN.setObjectName("AddSilencer_BTN")
         PopUp_Add_Silencer.setCentralWidget(self.centralwidget)
+        self.AddSilencer_BTN.clicked.connect(lambda: self.WriteToDB())
 
         # Name
         self.Name_TE = QtWidgets.QTextEdit(self.gridLayoutWidget)

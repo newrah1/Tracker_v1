@@ -15,3 +15,25 @@
 12-May-22 18:53:04 - NumExpr defaulting to 6 threads.
 12-May-22 18:53:38 - NumExpr defaulting to 6 threads.
 12-May-22 18:54:11 - NumExpr defaulting to 6 threads.
+12-May-22 18:56:04 - NumExpr defaulting to 6 threads.
+12-May-22 19:00:25 - NumExpr defaulting to 6 threads.
+12-May-22 19:01:59 - NumExpr defaulting to 6 threads.
+12-May-22 19:03:12 - INSERT INTO Primer 
+               (Name, Manufacturer, Model, SKU, Size, PrimerType, Notes, Picture) 
+               VALUES
+               ('','','','','','','','')
+12-May-22 19:11:44 - NumExpr defaulting to 6 threads.
+12-May-22 19:19:21 - NumExpr defaulting to 6 threads.
+12-May-22 19:25:34 - INSERT INTO Primer 
+               (Name, Manufacturer, Model, SKU, Size, PrimerType, Notes, Picture) 
+               VALUES
+               ('Federal_SRP	','Federal','#205','3627','Small	','Rifle','','Federal_Small_Rifle_Primers.jpg')
+12-May-22 19:25:49 - NumExpr defaulting to 6 threads.
+12-May-22 19:26:53 - NumExpr defaulting to 6 threads.
+17-May-22 20:12:30 - NumExpr defaulting to 6 threads.
+17-May-22 20:42:01 - NumExpr defaulting to 6 threads.
+17-May-22 21:08:24 - INSERT INTO Silencer 
+               (Name, Manufacturer, Model, SKU, Caliber, Overall_Len_Inch, Weight_lb,  Notes, 
+               Picture) 
+               VALUES
+               ('test','','','','','','','','')

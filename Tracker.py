@@ -505,14 +505,62 @@ class Ui_MainWindow(object):
 	# DTab --------------------------------
 
 	# STab --------------------------------
-	def displayData_STab(self):
-		pass
-
 	def PopUp_ShowAllSilencers(self, checked):
 		if self.STab_ShowSilencers_POP.isVisible():
 			self.STab_ShowSilencers_POP.hide()
 		else:
 			self.STab_ShowSilencers_POP.show()
+
+	def displayData_STab(self):
+		try:
+			# get the value from the Silencer comboBox
+			Selected_Silencer = self.STab_SILIENCER_Combo.currentText()
+
+			# query the DB save to df
+			firearm_df, bullet_df, powder_df, case_df, primer_df, silencer_df = \
+				self.query_databases()
+
+			# filter by selected Silencer
+			query = '{}"{}"'.format("Name == ", str(Selected_Silencer))
+			silencer_df = silencer_df.query(query)
+
+			# clear the form
+			self.STab_Name_TB.clear()
+			self.STab_Manufacturer_TB.clear()
+			self.STab_Model_TB.clear()
+			self.STab_SKU_TB.clear()
+			self.STab_Caliber_TB.clear()
+			self.STab_OLenght_TB.clear()
+			self.STab_Weight_TB.clear()
+			self.STab_Diameter_TB.clear()
+
+			# fill in the form
+			self.STab_Name_TB.setText(silencer_df['Name'].to_string(index=False))
+			self.STab_Manufacturer_TB.setText(silencer_df['Manufacturer'].to_string(index=False))
+			self.STab_Model_TB.setText(silencer_df['Model'].to_string(index=False))
+			self.STab_SKU_TB.setText(silencer_df['SKU'].to_string(index=False))
+			self.STab_Caliber_TB.setText(silencer_df['Caliber'].to_string(index=False))
+			self.STab_OLenght_TB.setText(silencer_df['Overall_Len_Inch'].to_string(index=False))
+			self.STab_Weight_TB.setText(silencer_df['Weight_lb'].to_string(index=False))
+			self.STab_Diameter_TB.setText(silencer_df['Diameter_Inch'].to_string(index=False))
+
+
+			# Context manager to temporarily set options in the with statement context.
+			# required to display 'Notes'
+			with option_context('display.max_colwidth', None):
+				self.STab_Notes_TB.setText(silencer_df['Notes'].to_string(
+					index=False))
+				# Display picture of Bullet in GUI
+				high_rez = QtCore.QSize(400, 400)
+				# pixmap = QtGui.QPixmap(bullet_df['Picture'].to_string(index=False))
+				picture = '{}{}'.format("./picts/", silencer_df['Picture'].to_string(index=False))
+				pixmap = QtGui.QPixmap(picture)
+				pixmap = pixmap.scaled(high_rez, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+				self.BTab_Picture_LBL.setPixmap(pixmap)
+
+		except Exception as e:
+			print("Exception = ", str(e))
+			traceback.print_exc()
 
 	def PopUp_Add_Silencer_BTN(self):
 		if self.PopUp_Silencer_Add.isVisible():
@@ -539,6 +587,7 @@ class Ui_MainWindow(object):
 		powders_list = powders_df['Name'].unique().tolist()
 		cases_list = cases_df['Name'].unique().tolist()
 		primers_list = primers_df['Name'].unique().tolist()
+		silencer_list = silencer_df['Name'].unique().tolist()
 
 		# Main Window setup
 		MainWindow.setObjectName("MainWindow")
@@ -1839,7 +1888,7 @@ class Ui_MainWindow(object):
 											QtWidgets.QSizePolicy.Minimum,
 											QtWidgets.QSizePolicy.Expanding)
 		self.PRTab_gridLayout.addItem(spacerItem4, 34, 1, 1, 1)
-
+		# PRTab Combo Box
 		self.PRTab_Primer_LBL = QtWidgets.QLabel(self.PRTab_tab)
 		self.PRTab_Primer_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
 		self.PRTab_Primer_LBL.setAlignment(QtCore.Qt.AlignCenter)
@@ -1847,6 +1896,7 @@ class Ui_MainWindow(object):
 		self.PRTab_Primer_Combo = QtWidgets.QComboBox(self.PRTab_tab)
 		self.PRTab_Primer_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
 		self.PRTab_Primer_Combo.setObjectName("PRTab_Primer_Combo")
+		self.PRTab_Primer_Combo.addItems(primers_list)
 
 		# PRTab Name
 		self.PRTab_Name_LBL = QtWidgets.QLabel(self.formLayoutWidget_6)
@@ -2391,14 +2441,7 @@ class Ui_MainWindow(object):
 		# STab --------------------------------
 		self.STab_tab = QtWidgets.QWidget()
 		self.STab_tab.setObjectName("STab_tab")
-		# STab Combo Box
-		self.STab_SILIENCER_Combo = QtWidgets.QComboBox(self.STab_tab)
-		self.STab_SILIENCER_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
-		self.STab_SILIENCER_Combo.setObjectName("STab_SILIENCER_Combo")
-		self.STab_SILIENCER_LBL = QtWidgets.QLabel(self.STab_tab)
-		self.STab_SILIENCER_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
-		self.STab_SILIENCER_LBL.setAlignment(QtCore.Qt.AlignCenter)
-		self.STab_SILIENCER_LBL.setObjectName("STab_SILIENCER_LBL")
+
 		self.formLayoutWidget_8 = QtWidgets.QWidget(self.STab_tab)
 		self.formLayoutWidget_8.setGeometry(QtCore.QRect(10, 60, 471, 928))
 		self.formLayoutWidget_8.setObjectName("formLayoutWidget_8")
@@ -2416,12 +2459,22 @@ class Ui_MainWindow(object):
 		self.STab_verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_8)
 		self.STab_verticalLayout.setContentsMargins(0, 0, 0, 0)
 		self.STab_verticalLayout.setObjectName("STab_verticalLayout")
+		# STab Combo Box
+		self.STab_SILIENCER_Combo = QtWidgets.QComboBox(self.STab_tab)
+		self.STab_SILIENCER_Combo.setGeometry(QtCore.QRect(10, 30, 471, 26))
+		self.STab_SILIENCER_Combo.setObjectName("STab_SILIENCER_Combo")
+		self.STab_SILIENCER_Combo.addItems(silencer_list)
+		self.STab_SILIENCER_LBL = QtWidgets.QLabel(self.STab_tab)
+		self.STab_SILIENCER_LBL.setGeometry(QtCore.QRect(20, 10, 451, 20))
+		self.STab_SILIENCER_LBL.setAlignment(QtCore.Qt.AlignCenter)
+		self.STab_SILIENCER_LBL.setObjectName("STab_SILIENCER_LBL")
 
 		# STab ShowData BTN
 		self.STab_ShowData_BTN = QtWidgets.QPushButton(self.STab_tab)
 		self.STab_ShowData_BTN.setGeometry(QtCore.QRect(490, 30, 191, 31))
 		self.STab_ShowData_BTN.setDefault(True)
 		self.STab_ShowData_BTN.setObjectName("STab_ShowData_BTN")
+		self.STab_ShowData_BTN.clicked.connect(self.displayData_STab)
 		# Name
 		self.STab_Name_LBL = QtWidgets.QLabel(self.formLayoutWidget_8)
 		self.STab_Name_LBL.setObjectName("STab_Name_LBL")
